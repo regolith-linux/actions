@@ -12,6 +12,7 @@ A collection of reusable Github Actions workflows.
 | `ensure-sudo` | Ensure `sudo` command is installed and available.  |
 | `get-voulage` | Clone and fetch [voulage](https://github.com/regolith-linux/voulage/) repository at given ref.  |
 | `import-gpg` | Import given GPG private key with its associated email and full name.  |
+| `prepare-release` | Extract the version out of `debian/changelog` file and pass it through the tag generator to determine the actual release version. Update corresponding `testing` package models with that release version for the provided package.  |
 | `publish-repo` | Publish packages of supported distro(s), codename(s), and component(s) to a new or existing archive repository.  |
 | `rebuild-sources` | Rebuild the source files.  The `.dsc` and `.debian.tar.xz` files will be rebuilt out of exisiting `.orig.tar.gz` file which previously was repacked without `/debian` folder in it.  This will ensure one single .orig.tar.gz file can be used for all the packages of the same version and same component of different codenames.  |
 | `setup-ssh` | Setup SSH agent and add server keyscan to the known_hosts file.  |
