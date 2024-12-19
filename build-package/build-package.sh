@@ -2,9 +2,12 @@
 
 set -e
 
-voulage_path="/tmp/voulage-actions-cache"
+if [ -z "$VOULAGE_PATH" ]; then
+  echo "Error: voulage-path is empty"
+  exit 1
+fi
 
-pushd "$voulage_path" >/dev/null || exit 1
+pushd "$VOULAGE_PATH" >/dev/null || exit 1
 
 echo "Building ${PACKAGE_NAME} @ ${PACKAGE_REF} for ${DISTRO}/${CODENAME} (${STAGE})..."
 

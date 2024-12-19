@@ -1,0 +1,24 @@
+name: Get Voulage
+description: |
+  Clone and fetch https://github.com/regolith-linux/voulage/ repository at given ref.
+
+inputs:
+  ref:
+    description: "Git repository ref to checkout"
+    required: false
+    default: "main"
+
+outputs:
+  path:
+    description: "The path voulage is cloned into"
+    value: ${{ steps.voulage.outputs.path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get Voulage
+      id: voulage
+      shell: bash
+      env:
+        VOULAGE_REF: "${{ inputs.ref }}"
+      run: $GITHUB_ACTION_PATH/entrypoint.sh
