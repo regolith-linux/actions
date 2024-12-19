@@ -4,6 +4,24 @@ description: |
   format. The list is being built out of `stage/unstable` folder of voulage repository
   at https://github.com/regolith-linux/voulage/.
 
+inputs:
+  type:
+    description: "Type of Matrix (package, platform)"
+    required: true
+    default: "package"
+  name:
+    description: "Name of the package"
+    required: false
+  ref:
+    description: "Package git repository ref to check the support (e.g. branch, tag, or hash)"
+    required: false
+  stage:
+    description: "Regolith release stage (e.g. unstable, testing, stable)"
+    required: true
+  arch:
+    description: "Regolith architectures (amd64, arm64)"
+    required: true
+
 outputs:
   includes:
     description: "The serialized JSON list of matrix include items"
@@ -28,4 +46,9 @@ runs:
       shell: bash
       env:
         VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
-      run: $GITHUB_ACTION_PATH/build-matrix.sh
+        MATRIX_TYPE: "${{ inputs.type }}"
+        PACKAGE_NAME: "${{ inputs.name }}"
+        PACKAGE_REF: "${{ inputs.ref }}"
+        BUILD_STAGE: "${{ inputs.stage }}"
+        BUILD_ARCH: "${{ inputs.arch }}"
+      run: $GITHUB_ACTION_PATH/entrypoint.sh
