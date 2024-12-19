@@ -7,12 +7,6 @@ inputs:
   name:
     description: "Name of the package to build"
     required: true
-  repo:
-    description: "Package git repository URL (it can be both ssh and https)"
-    required: true
-  ref:
-    description: "Package git repository ref to checkout the code from (e.g. branch, tag, or hash)"
-    required: true
   distro:
     description: "Target Distro to build the package for (debian, ubuntu)"
     required: true
@@ -21,6 +15,18 @@ inputs:
     required: true
   stage:
     description: "Regolith release stage (e.g. unstable, testing, stable)"
+    required: true
+  suite:
+    description: "Regolith package archive suite (e.g. unstable, testing, stable)"
+    required: true
+  component:
+    description: "Regolith package archive component (e.g. main, v3.2, v3.1)"
+    required: true
+  arch:
+    description: "Regolith architectures (amd64, arm64)"
+    required: true
+  gpg-key:
+    description: "GPG Private Key to import"
     required: true
   gpg-email:
     description: "Email ID associated with the GPG Key"
@@ -38,16 +44,28 @@ runs:
       id: voulage
       uses: regolith-linux/actions/get-voulage@main
 
+    - name: Import GPG Key
+      uses: regolith-linux/actions/import-gpg@main
+      with:
+        gpg-key: "${{ inputs.gpg-key }}"
+        gpg-email: "${{ inputs.gpg-email }}"
+        gpg-name: "${{ inputs.gpg-name }}"
+
     - name: Build Package
       shell: bash
       env:
+        WORKSPACE_PATH: "${{ github.workspace }}"
+        PUBLISH_PATH: "${{ runner.temp }}"
         VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
+
         PACKAGE_NAME: "${{ inputs.name }}"
-        PACKAGE_URL: "${{ inputs.repo }}"
-        PACKAGE_REF: "${{ inputs.ref }}"
         DISTRO: "${{ inputs.distro }}"
         CODENAME: "${{ inputs.codename }}"
         STAGE: "${{ inputs.stage }}"
+        SUITE: "${{ inputs.suite }}"
+        COMPONENT: "${{ inputs.component }}"
+        ARCH: "${{ inputs.arch }}"
+
         GPG_EMAIL: "${{ inputs.gpg-email }}"
         GPG_NAME: "${{ inputs.gpg-name }}"
-      run: $GITHUB_ACTION_PATH/build-package.sh
+      run: $GITHUB_ACTION_PATH/entrypoint.sh
