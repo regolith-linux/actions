@@ -73,7 +73,7 @@ runs:
           -v $(pwd):/${{ github.workspace }} \
           -w ${{ github.workspace }} \
           --platform linux/${{ inputs.arch }} \
-          ${{ matrix.distro }} \
+          ${{ inputs.distro }}:${{ inputs.codename }} \
           uname -a && ls -la
 
     # - name: Build Package
