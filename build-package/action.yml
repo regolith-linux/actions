@@ -40,6 +40,22 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      with:
+        platforms: ${{ inputs.arch }}
+
+    - name: Run in Docker
+      shell: bash
+      run: |
+        docker run \
+          --rm \
+          -v $(pwd):/${{ github.workspace }} \
+          -w ${{ github.workspace }} \
+          --platform linux/${{ inputs.arch }} \
+          ${{ inputs.distro }}:${{ inputs.codename }} \
+          uname -a && ls -la
+
     - name: Get Voulage
       id: voulage
       uses: regolith-linux/actions/get-voulage@enhance-build-matrix
@@ -60,21 +76,6 @@ runs:
       shell: bash
       run: sudo apt update && DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends jq git devscripts wget dput diffutils
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
-      with:
-        platforms: ${{ inputs.arch }}
-
-    - name: Run in Docker
-      shell: bash
-      run: |
-        docker run \
-          --rm \
-          -v $(pwd):/${{ github.workspace }} \
-          -w ${{ github.workspace }} \
-          --platform linux/${{ inputs.arch }} \
-          ${{ inputs.distro }}:${{ inputs.codename }} \
-          uname -a && ls -la
 
     # - name: Build Package
     #   shell: bash
