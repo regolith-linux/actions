@@ -58,6 +58,9 @@ runs:
 
     - name: Run in Docker
       uses: docker://ubuntu:oracular
+
+    - name: Run in Docker
+      shell: bash
       run: |
         ls -la
         uname -a
