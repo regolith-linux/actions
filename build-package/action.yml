@@ -60,21 +60,37 @@ runs:
       shell: bash
       run: sudo apt update && DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends jq git devscripts wget dput diffutils
 
-    - name: Build Package
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      with:
+        platforms: ${{ inputs.arch }}
+
+    - name: Run in Docker
       shell: bash
-      env:
-        WORKSPACE_PATH: "${{ github.workspace }}"
-        ACTIONS_PATH: "${{ runner.temp }}" # TODO
-        VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
+      run: |
+        docker run \
+          --rm \
+          -v $(pwd):/${{ github.workspace }} \
+          -w ${{ github.workspace }} \
+          --platform linux/${{ inputs.arch }} \
+          ${{ matrix.distro }} \
+          uname -a && ls -la
 
-        PACKAGE_NAME: "${{ inputs.name }}"
-        DISTRO: "${{ inputs.distro }}"
-        CODENAME: "${{ inputs.codename }}"
-        STAGE: "${{ inputs.stage }}"
-        SUITE: "${{ inputs.suite }}"
-        COMPONENT: "${{ inputs.component }}"
-        ARCH: "${{ inputs.arch }}"
+    # - name: Build Package
+    #   shell: bash
+    #   env:
+    #     WORKSPACE_PATH: "${{ github.workspace }}"
+    #     ACTIONS_PATH: "${{ runner.temp }}" # TODO
+    #     VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
 
-        GPG_EMAIL: "${{ inputs.gpg-email }}"
-        GPG_NAME: "${{ inputs.gpg-name }}"
-      run: $GITHUB_ACTION_PATH/entrypoint.sh
+    #     PACKAGE_NAME: "${{ inputs.name }}"
+    #     DISTRO: "${{ inputs.distro }}"
+    #     CODENAME: "${{ inputs.codename }}"
+    #     STAGE: "${{ inputs.stage }}"
+    #     SUITE: "${{ inputs.suite }}"
+    #     COMPONENT: "${{ inputs.component }}"
+    #     ARCH: "${{ inputs.arch }}"
+
+    #     GPG_EMAIL: "${{ inputs.gpg-email }}"
+    #     GPG_NAME: "${{ inputs.gpg-name }}"
+    #   run: $GITHUB_ACTION_PATH/entrypoint.sh
