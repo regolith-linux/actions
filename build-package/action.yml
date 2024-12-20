@@ -56,6 +56,12 @@ runs:
           ${{ inputs.distro }}:${{ inputs.codename }} \
           uname -a && ls -la
 
+    - name: Run in Docker
+      uses: docker://ubuntu:oracular
+      run: |
+        ls -la
+        uname -a
+
     - name: Get Voulage
       id: voulage
       uses: regolith-linux/actions/get-voulage@enhance-build-matrix
