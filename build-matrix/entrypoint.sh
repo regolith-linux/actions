@@ -80,7 +80,9 @@ for dir in stage/$BUILD_STAGE/*/*/; do
   fi
 
   echo "  - $distro/$codename: OK"
-  includes+=("$(jq -n -c --arg distro "$distro" --arg codename "$codename" '$ARGS.named')")
+  for arch in $BUILD_ARCH; do
+    includes+=("$(jq -n -c --arg distro "$distro" --arg codename "$codename" --arg arch "$arch" '$ARGS.named')")
+  done
 done
 
 popd >/dev/null || exit 1
