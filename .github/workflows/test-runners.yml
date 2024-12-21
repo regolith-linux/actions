@@ -70,10 +70,10 @@ jobs:
   #         ls -la "$WORKSPACE_ROOT_PATH"
 
   build:
-    runs-on: regolith-runner-set
+    runs-on: ["regolith-${{ matrix.arch }}"]
     # runs-on: ubuntu-24.04
     # runs-on: [self-hosted, Linux, "${{ matrix.arch }}", noble] 
-    # container: "${{ matrix.distro }}:${{ matrix.codename }}"
+    container: "${{ matrix.distro }}:${{ matrix.codename }}"
     needs: matrix-builder
     strategy:
       fail-fast: false
@@ -86,6 +86,8 @@ jobs:
       - name: Build
         run: |
           echo "Building ${{ matrix.distro }}/${{ matrix.codename }} (arch=${{ matrix.arch }})"
+          uname -a
+          cat /etc/*-release
 
       # - name: Build Package
       #   uses: regolith-linux/actions/build-package@enhance-build-matrix
