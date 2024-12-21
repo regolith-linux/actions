@@ -7,7 +7,7 @@ on:
 
 jobs:
   matrix-builder:
-    runs-on: regolith-runner-set
+    runs-on: regolith-amd64
     outputs:
       includes: ${{ steps.builder.outputs.includes }}
     # outputs:
