@@ -11,17 +11,17 @@ jobs:
     outputs:
       includes: ${{ steps.builder.outputs.includes }}
     # outputs:
-    #   stages: ${{ steps.calc-matrix.outputs.stages }}
-    #   distros: ${{ steps.calc-matrix.outputs.distros }}
-    #   codenames: ${{ steps.calc-matrix.outputs.codenames }}
-    #   arches: ${{ steps.calc-matrix.outputs.arches }}
-    #   suites: ${{ steps.calc-matrix.outputs.suites }}
-    #   runners: ${{ steps.calc-matrix.outputs.runners }}
-    #   includes: ${{ steps.calc-matrix.outputs.includes }}
-    #   excludes: ${{ steps.calc-matrix.outputs.excludes }}
+    #   stages: ${{ steps.builder.outputs.stages }}
+    #   distros: ${{ steps.builder.outputs.distros }}
+    #   codenames: ${{ steps.builder.outputs.codenames }}
+    #   arches: ${{ steps.builder.outputs.arches }}
+    #   suites: ${{ steps.builder.outputs.suites }}
+    #   runners: ${{ steps.builder.outputs.runners }}
+    #   includes: ${{ steps.builder.outputs.includes }}
+    #   excludes: ${{ steps.builder.outputs.excludes }}
     steps:
       - name: Calculate Matrix
-        id: calc-matrix
+        id: builder
         run: |
           INCLUDES=()
 
