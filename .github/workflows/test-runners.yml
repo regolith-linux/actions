@@ -1,0 +1,95 @@
+name: Test Runners
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  matrix-builder:
+    runs-on: regolith-runner-set 
+    outputs:
+      includes: ${{ steps.builder.outputs.includes }}
+    # outputs:
+    #   stages: ${{ steps.calc-matrix.outputs.stages }}
+    #   distros: ${{ steps.calc-matrix.outputs.distros }}
+    #   codenames: ${{ steps.calc-matrix.outputs.codenames }}
+    #   arches: ${{ steps.calc-matrix.outputs.arches }}
+    #   suites: ${{ steps.calc-matrix.outputs.suites }}
+    #   runners: ${{ steps.calc-matrix.outputs.runners }}
+    #   includes: ${{ steps.calc-matrix.outputs.includes }}
+    #   excludes: ${{ steps.calc-matrix.outputs.excludes }}
+    steps:
+      - name: Calculate Matrix
+        id: calc-matrix
+        run: |
+          INCLUDES=()
+
+          INCLUDES+=($(jq -n -c --arg distro "debian" --arg codename "bookworm" '$ARGS.named'))
+          INCLUDES+=($(jq -n -c --arg distro "debian" --arg codename "testing" '$ARGS.named'))
+          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "jammy" '$ARGS.named'))
+          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "noble" '$ARGS.named'))
+          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "oracular" '$ARGS.named'))
+
+          echo "includes=$(jq -n -c "[$(printf '%s\n' "${INCLUDES[@]}" | paste -sd,)]" '$ARGS.named')" >> $GITHUB_OUTPUT
+
+    # steps:
+    #   - name: Build Matrix
+    #     id: builder
+    #     uses: regolith-linux/actions/build-matrix@enhance-build-matrix
+    #     with:
+    #       name: "${{ github.event.repository.name }}"
+    #       ref: "${{ github.base_ref }}"
+    #       # arch: "amd64"
+    #       arch: "amd64 arm64"
+    #       stage: "unstable"
+
+  # test:
+  #   runs-on: ubuntu-24.04
+  #   container: "ubuntu:oracular"
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - run: |
+  #         pwd
+  #         ls -la
+  #         touch $(pwd)/in-pwd
+  #         ls -la
+  #         echo "==================================="
+  #         WORKSPACE_ROOT_PATH=$(realpath "$(realpath "$(pwd)")/../")
+  #         echo $WORKSPACE_ROOT_PATH
+  #         ls -la "$WORKSPACE_ROOT_PATH"
+  #         touch $WORKSPACE_ROOT_PATH/in-workspace
+  #         ls -la "$WORKSPACE_ROOT_PATH"
+  #     - run: |
+  #         pwd
+  #         ls -la
+  #         echo "==================================="
+  #         WORKSPACE_ROOT_PATH=$(realpath "$(realpath "$(pwd)")/../")
+  #         echo $WORKSPACE_ROOT_PATH
+  #         ls -la "$WORKSPACE_ROOT_PATH"
+
+  build:
+    runs-on: ubuntu-24.04
+    # runs-on: [self-hosted, Linux, "${{ matrix.arch }}", noble] 
+    # container: "${{ matrix.distro }}:${{ matrix.codename }}"
+    needs: matrix-builder
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.matrix-builder.outputs.includes) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Package
+        uses: regolith-linux/actions/build-package@enhance-build-matrix
+        with:
+          name: "${{ github.event.repository.name }}"
+          distro: "${{ matrix.distro }}"
+          codename: "${{ matrix.codename }}"
+          stage: "unstable"
+          suite: "unstable"
+          component: "main"
+          arch: "${{ matrix.arch }}"
+          gpg-key: "${{ secrets.PACKAGE_PRIVATE_KEY2 }}"
