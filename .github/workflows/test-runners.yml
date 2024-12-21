@@ -7,7 +7,7 @@ on:
 
 jobs:
   matrix-builder:
-    runs-on: regolith-runner-set 
+    runs-on: regolith-runner-set
     outputs:
       includes: ${{ steps.builder.outputs.includes }}
     # outputs:
@@ -25,11 +25,11 @@ jobs:
         run: |
           INCLUDES=()
 
-          INCLUDES+=($(jq -n -c --arg distro "debian" --arg codename "bookworm" '$ARGS.named'))
-          INCLUDES+=($(jq -n -c --arg distro "debian" --arg codename "testing" '$ARGS.named'))
-          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "jammy" '$ARGS.named'))
-          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "noble" '$ARGS.named'))
-          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "oracular" '$ARGS.named'))
+          INCLUDES+=($(jq -n -c --arg distro "debian" --arg codename "bookworm" --arg arch "amd64" '$ARGS.named'))
+          INCLUDES+=($(jq -n -c --arg distro "debian" --arg codename "testing" --arg arch "amd64" '$ARGS.named'))
+          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "jammy" --arg arch "amd64" '$ARGS.named'))
+          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "noble" --arg arch "amd64" '$ARGS.named'))
+          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "oracular" --arg arch "amd64" '$ARGS.named'))
 
           echo "includes=$(jq -n -c "[$(printf '%s\n' "${INCLUDES[@]}" | paste -sd,)]" '$ARGS.named')" >> $GITHUB_OUTPUT
 
@@ -70,7 +70,8 @@ jobs:
   #         ls -la "$WORKSPACE_ROOT_PATH"
 
   build:
-    runs-on: ubuntu-24.04
+    runs-on: regolith-runner-set
+    # runs-on: ubuntu-24.04
     # runs-on: [self-hosted, Linux, "${{ matrix.arch }}", noble] 
     # container: "${{ matrix.distro }}:${{ matrix.codename }}"
     needs: matrix-builder
@@ -82,14 +83,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build Package
-        uses: regolith-linux/actions/build-package@enhance-build-matrix
-        with:
-          name: "${{ github.event.repository.name }}"
-          distro: "${{ matrix.distro }}"
-          codename: "${{ matrix.codename }}"
-          stage: "unstable"
-          suite: "unstable"
-          component: "main"
-          arch: "${{ matrix.arch }}"
-          gpg-key: "${{ secrets.PACKAGE_PRIVATE_KEY2 }}"
+      - name: Build
+        run: |
+          echo "Building ${{ matrix.distro }}/${{ matrix.codename }} (arch=${{ matrix.arch }})"
+
+      # - name: Build Package
+      #   uses: regolith-linux/actions/build-package@enhance-build-matrix
+      #   with:
+      #     name: "${{ github.event.repository.name }}"
+      #     distro: "${{ matrix.distro }}"
+      #     codename: "${{ matrix.codename }}"
+      #     stage: "unstable"
+      #     suite: "unstable"
+      #     component: "main"
+      #     arch: "${{ matrix.arch }}"
+      #     gpg-key: "${{ secrets.PACKAGE_PRIVATE_KEY2 }}"
