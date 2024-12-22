@@ -40,6 +40,13 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Run in Docker
+      shell: bash
+      run: |
+        ls -la
+        uname -a
+        cat /etc/*-release
+
     - name: Get Voulage
       id: voulage
       uses: regolith-linux/actions/get-voulage@enhance-build-matrix
