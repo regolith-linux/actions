@@ -39,12 +39,13 @@ runs:
       run: apt update && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends sudo jq git devscripts wget dput diffutils
 
     - name: Get Voulage
-      shell: bash
-      run: $GITHUB_ACTION_PATH/get-voulage.sh
+      id: voulage
+      uses: regolith-linux/actions/get-voulage@main
 
     - name: Build Package
       shell: bash
       env:
+        VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
         PACKAGE_NAME: "${{ inputs.name }}"
         PACKAGE_URL: "${{ inputs.repo }}"
         PACKAGE_REF: "${{ inputs.ref }}"

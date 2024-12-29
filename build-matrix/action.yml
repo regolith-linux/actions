@@ -2,7 +2,7 @@ name: Build Matrix of Supported OS
 description: |
   Build a matrix of currently supported distros and codenames in encoded JSON list
   format. The list is being built out of `stage/unstable` folder of voulage repository
-  at https://github.com/regolith-linux/voulage/
+  at https://github.com/regolith-linux/voulage/.
 
 outputs:
   includes:
@@ -13,10 +13,12 @@ runs:
   using: composite
   steps:
     - name: Get Voulage
-      shell: bash
-      run: $GITHUB_ACTION_PATH/get-voulage.sh
+      id: voulage
+      uses: regolith-linux/actions/get-voulage@main
 
     - name: Matrix Includes Builder
       id: builder
       shell: bash
+      env:
+        VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
       run: $GITHUB_ACTION_PATH/build-matrix.sh

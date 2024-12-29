@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
-voulage_path="/tmp/voulage-actions-cache"
+set -e
 
-pushd "$voulage_path" >/dev/null || exit 1
+if [ -z "$VOULAGE_PATH" ]; then
+  echo "Error: voulage-path is empty"
+  exit 1
+fi
+
+pushd "$VOULAGE_PATH" >/dev/null || exit 1
 
 echo "Supported distro/codename:"
 
