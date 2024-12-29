@@ -1,0 +1,14 @@
+name: Ensure Sudo
+description: |
+  Ensure sudo command is installed and available.
+
+runs:
+  using: composite
+  steps:
+    - name: Ensure Sudo
+      shell: bash
+      run: |
+        if ! command -v sudo 2>&1 >/dev/null; then
+          apt update
+          DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends sudo
+        fi

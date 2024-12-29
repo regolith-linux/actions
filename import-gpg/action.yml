@@ -18,9 +18,12 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Ensure Sudo
+      uses: regolith-linux/actions/ensure-sudo@main
+
     - name: Environment Setup
       shell: bash
-      run: apt update && DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends gpg gpg-agent
+      run: sudo apt update && DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends gpg gpg-agent
 
     - name: Import GPG Key
       shell: bash

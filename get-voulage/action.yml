@@ -16,6 +16,13 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Ensure Sudo
+      uses: regolith-linux/actions/ensure-sudo@main
+
+    - name: Environment Setup
+      shell: bash
+      run: sudo apt update && DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends git ca-certificates
+
     - name: Get Voulage
       id: voulage
       shell: bash
