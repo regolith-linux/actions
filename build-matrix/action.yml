@@ -16,6 +16,13 @@ runs:
       id: voulage
       uses: regolith-linux/actions/get-voulage@main
 
+    - name: Ensure Sudo
+      uses: regolith-linux/actions/ensure-sudo@main
+
+    - name: Environment Setup
+      shell: bash
+      run: sudo apt update && DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends jq
+
     - name: Matrix Includes Builder
       id: builder
       shell: bash
