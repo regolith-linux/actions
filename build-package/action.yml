@@ -34,13 +34,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Ensure Sudo
-      uses: regolith-linux/actions/ensure-sudo@main
-
-    - name: Environment Setup
-      shell: bash
-      run: sudo apt update && DEBIAN_FRONTEND=noninteractive sudo apt install -y --no-install-recommends jq git devscripts wget dput diffutils
-
     - name: Get Voulage
       id: voulage
       uses: regolith-linux/actions/get-voulage@main
