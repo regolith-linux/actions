@@ -38,6 +38,7 @@ fi
 
 includes=()
 error_msg=""
+STAGE_MODEL_PACKAGE_REF=""
 
 process_model() {
   process_level="$1"
@@ -46,7 +47,7 @@ process_model() {
   error_msg=""
 
   if [ -z "$process_level" ]; then
-    error_msg="process level is empty (e.g. package, os)"
+    error_msg="process level is empty (e.g. package, distro)"
     return 1
   fi
   if [ -z "$model_file" ]; then
@@ -77,16 +78,30 @@ process_model() {
     else
       ref=$(echo "$package" | jq -r '.ref')
 
-      # Package ref is different that the ref we are executing this on
-      if [ "$ref" != "$PACKAGE_REF" ]; then
-        error_msg="Ignored (request ref: $PACKAGE_REF, model ref: $ref)"
-        return 1
+      if [ "$process_level" == "stage" ]; then
+        STAGE_MODEL_PACKAGE_REF="$ref"
+      fi
+
+      # Package ref is different that the ref we are executing this on.
+      # Note: this is only needed on distro level.
+      if [ "$process_level" == "distro" ]; then
+        if [ "$ref" != "$PACKAGE_REF" ]; then
+          error_msg="Ignored (request ref: $PACKAGE_REF, model ref: $ref)"
+          return 1
+        fi
       fi
     fi
   else
     if [ "$process_level" == "stage" ]; then
       error_msg="package not found in model"
       return 1
+    else
+      # Distro doesn't explicitly override the root model. We just need
+      # to make sure the root model's ref is the same as requested ref.
+      if [ "$STAGE_MODEL_PACKAGE_REF" != "$PACKAGE_REF" ]; then
+        error_msg="Ignored (request ref: $PACKAGE_REF, model ref: $STAGE_MODEL_PACKAGE_REF)"
+        return 1
+      fi
     fi
   fi
 
