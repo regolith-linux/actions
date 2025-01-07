@@ -8,6 +8,8 @@ Clone and fetch [voulage] repository at given `ref`.
 - uses: regolith-linux/actions/get-voulage@main
   with:
     # ref is the valid ref in git repository to checkout.
+    #
+    # Reguired.
     ref: "main"
 ```
 
