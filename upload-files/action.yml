@@ -1,0 +1,46 @@
+name: Upload Packages
+description: |
+  Upload debian package and source files to the publish server.
+
+inputs:
+  server-address:
+    description: "Publish Server IP address"
+    required: true
+  server-username:
+    description: "Server SSH username"
+    required: true
+  server-ssh-key:
+    description: "Server SSH private key"
+    required: true
+  source-path:
+    description: "Path on disk to upload packages from"
+    required: true
+  packages-path:
+    description: "Path on disk that conntains the packages"
+    required: true
+    default: "/opt/archives/packages/"
+  package-name:
+    description: "Name of the folder to be created in 'packages-path'"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup SSH agent
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ inputs.server-ssh-key }}
+
+    - name: Environment Setup
+      shell: bash
+      run: ssh-keyscan -H ${{ inputs.server-address }} >> ~/.ssh/known_hosts
+
+    - name: Upload Files
+      shell: bash
+      run: |
+        set -e
+
+        rsync \
+          -avzhH \
+          ${{ inputs.source-path }}/* \
+          ${{ inputs.server-username }}@${{ inputs.server-address }}:${{ inputs.packages-path }}/${{ inputs.package-name }}
