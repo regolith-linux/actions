@@ -1,0 +1,33 @@
+name: Generate README
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate:
+    runs-on: ubuntu-24.04
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Regenrate README.md
+        run: ./.github/scripts/gen-readme.sh
+
+      - name: Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.ORG_BROADCAST_TOKEN }}
+        with:
+          file_pattern: "README.md"
+          commit_message: "Auto generate README.md"
+          commit_user_name: regolith-bot
+          commit_user_email: bot@regolith-desktop.com
+          commit_author: "regolith-bot <bot@regolith-desktop.com>"
