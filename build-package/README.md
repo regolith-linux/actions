@@ -13,16 +13,6 @@ name, package repo, and package ref to checkout the code.
     # Required.
     name: "..."
 
-    # repo is the package git repository URL (it can be both ssh and https).
-    #
-    # Required.
-    repo: "..."
-
-    # ref is a valid git repository ref to checkout the code from (e.g. branch, tag, or hash).
-    #
-    # Required.
-    ref: "..."
-
     # distro is the target distro to build the package for (debian, ubuntu).
     #
     # Required.
@@ -37,6 +27,26 @@ name, package repo, and package ref to checkout the code.
     #
     # Required.
     stage: "..."
+
+    # suite is Regolith package archive suite (e.g. unstable, testing, stable).
+    #
+    # Required.
+    suite: "..."
+
+    # component is Regolith package archive component (e.g. main, v3.2, v3.1).
+    #
+    # Required.
+    component: "..."
+
+    # arch is Regolith architectures (amd64, arm64)
+    #
+    # Required.
+    arch: "..."
+
+    # gpg-key is the GPG private key to import.
+    #
+    # Required.
+    gpg-key: "..."
 
     # gpg-email is the email ID associated with the GPG Key.
     #
@@ -60,17 +70,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Import GPG Key
-        uses: regolith-linux/actions/import-gpg@main
-        with:
-          gpg-key: "${{ secrets.GPG_PRIVATE_KEY }}"
-
       - name: Build Package
         uses: regolith-linux/actions/build-package@main
         with:
           name: "foo-package"
-          repo: "https://github.com/${{ github.repository }}"
-          ref: "${{ github.ref }}"
           distro: "ubuntu"
           codename: "noble"
+          stage: "unstable"
+          suite: "unstable"
+          component: "main"
+          arch: "amd64"
+          gpg-key: "${{ secrets.GPG_PRIVATE_KEY }}"
 ```
