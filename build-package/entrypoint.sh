@@ -20,13 +20,14 @@ export DEBFULLNAME="${GPG_NAME}"
 
 echo "Building ${PACKAGE_NAME} for ${DISTRO}/${CODENAME} (stage=${STAGE} arch=${ARCH} component=${COMPONENT})..."
 
-WORKSPACE_ROOT_PATH=$(realpath "$(realpath "$WORKSPACE_PATH")/../")
+REAL_WORKSPACE_PATH=$(realpath "$(realpath "$WORKSPACE_PATH")/../")
+REAL_PUBLISH_PATH=$(realpath "$PUBLISH_PATH")
 
 "${VOULAGE_PATH}/.github/scripts/ci-build.sh" \
   --package-name "${PACKAGE_NAME}" \
   --extension "ext-debian.sh" \
-  --pkg-build-path "${WORKSPACE_ROOT_PATH}" \
-  --pkg-publish-path "${PUBLISH_PATH}/publish" \
+  --pkg-build-path "${REAL_WORKSPACE_PATH}" \
+  --pkg-publish-path "${REAL_PUBLISH_PATH}/publish" \
   --distro "${DISTRO}" \
   --codename "${CODENAME}" \
   --stage "${STAGE}" \
@@ -34,4 +35,7 @@ WORKSPACE_ROOT_PATH=$(realpath "$(realpath "$WORKSPACE_PATH")/../")
   --component "${COMPONENT}" \
   --arch "${ARCH}"
 
-find "${PUBLISH_PATH}/publish"
+find "${REAL_PUBLISH_PATH}/publish"
+
+# shellcheck disable=SC2086
+echo "publish-path=${REAL_PUBLISH_PATH}/publish" >> $GITHUB_OUTPUT

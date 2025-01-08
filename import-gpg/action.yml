@@ -21,14 +21,10 @@ runs:
     - name: Import GPG Key
       shell: bash
       run: |
-        mkdir -p ~/.gnupg/
-
         export DEBEMAIL="${{ inputs.gpg-email }}"
         export DEBFULLNAME="${{ inputs.gpg-name }}"
 
-        printf "${{ inputs.gpg-key }}" | base64 --decode > ~/.gnupg/private.key
+        printf "${{ inputs.gpg-key }}" | base64 --decode > /home/regolith/.gnupg/private.key
+        chmod 600 /home/regolith/.gnupg/*
 
-        chown -R $(whoami) ~/.gnupg/
-        chmod 600 ~/.gnupg/*
-        chmod 700 ~/.gnupg
-        gpg --batch --import ~/.gnupg/private.key
+        gpg --batch --import /home/regolith/.gnupg/private.key
