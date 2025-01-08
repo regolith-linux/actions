@@ -15,6 +15,14 @@ inputs:
     required: true
     default: "Regolith Linux"
 
+outputs:
+  gpg-email:
+    description: "Email ID associated with the GPG Key"
+    value: ${{ inputs.gpg-email }}
+  gpg-name:
+    description: "Full Name associated with the GPG Key"
+    value: ${{ inputs.gpg-name }}
+
 runs:
   using: composite
   steps:
