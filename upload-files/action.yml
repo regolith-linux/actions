@@ -33,7 +33,7 @@ runs:
 
     - name: Environment Setup
       shell: bash
-      run: ssh-keyscan -H ${{ inputs.server-address }} >> ~/.ssh/known_hosts
+      run: ssh-keyscan -H ${{ inputs.server-address }} >> /home/regolith/.ssh/known_hosts
 
     - name: Upload Files
       shell: bash
