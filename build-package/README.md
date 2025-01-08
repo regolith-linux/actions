@@ -43,11 +43,6 @@ name, package repo, and package ref to checkout the code.
     # Required.
     arch: "..."
 
-    # gpg-key is the GPG private key to import.
-    #
-    # Required.
-    gpg-key: "..."
-
     # gpg-email is the email ID associated with the GPG Key.
     #
     # Required.
@@ -80,5 +75,4 @@ jobs:
           suite: "unstable"
           component: "main"
           arch: "amd64"
-          gpg-key: "${{ secrets.GPG_PRIVATE_KEY }}"
 ```
