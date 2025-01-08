@@ -37,6 +37,11 @@ inputs:
     required: true
     default: "Regolith Linux"
 
+outputs:
+  publish-path:
+    description: "The published path on Actions runner"
+    value: ${{ steps.builder.outputs.publish-path }}
+
 runs:
   using: composite
   steps:
@@ -52,10 +57,11 @@ runs:
         gpg-name: "${{ inputs.gpg-name }}"
 
     - name: Build Package
+      id: builder
       shell: bash
       env:
         WORKSPACE_PATH: "${{ github.workspace }}"
-        PUBLISH_PATH: "${{ runner.temp }}"
+        PUBLISH_PATH: "/build/"
         VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
 
         PACKAGE_NAME: "${{ inputs.name }}"
