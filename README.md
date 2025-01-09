@@ -13,6 +13,7 @@ A collection of reusable Github Actions workflows.
 | `get-voulage` | Clone and fetch https://github.com/regolith-linux/voulage/ repository at given ref.   |
 | `import-gpg` | Import given GPG private key with its associated email and full name.   |
 | `publish-repo` | Publish packages of supported distro(s), codename(s), and component(s) to a new or existing archive repository.   |
+| `setup-ssh` | Setup SSH agent and add server keyscan to the known_hosts file.   |
 | `test-desktop` | Test that regolith-desktop is installable on a target system given public key, apt config line, and package(s) name (e.g. `regolith-session-sway`).   |
 | `upload-files` | Upload debian package and source files to the publish server.   |
 <!-- AUTO_GENERATE_END -->
