@@ -29,6 +29,7 @@ Import given GPG private key with its associated email and full name.
 jobs:
   build:
     runs-on: ubuntu-24.04
+    container: "ubuntu:noble"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,8 +43,10 @@ jobs:
         uses: regolith-linux/actions/build-package@main
         with:
           name: "foo-package"
-          repo: "https://github.com/${{ github.repository }}"
-          ref: "${{ github.ref }}"
-          distro: "${{ matrix.distro }}"
-          codename: "${{ matrix.codename }}"
+          distro: "ubuntu"
+          codename: "noble"
+          stage: "unstable"
+          suite: "unstable"
+          component: "main"
+          arch: "amd64"
 ```

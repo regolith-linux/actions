@@ -54,6 +54,12 @@ name, package repo, and package ref to checkout the code.
     gpg-name: "Regolith Linux"
 ```
 
+## Outputs
+
+| Name | Description | Example |
+|------|-------------|---------|
+| `publish-path` | The published path on Actions runner | `/build/publish/` |
+
 ## Scenarios
 
 ```yaml
