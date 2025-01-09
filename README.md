@@ -15,5 +15,5 @@ A collection of reusable Github Actions workflows.
 | `publish-repo` | Publish packages of supported distro(s), codename(s), and component(s) to a new or existing archive repository.   |
 | `setup-ssh` | Setup SSH agent and add server keyscan to the known_hosts file.   |
 | `test-desktop` | Test that regolith-desktop is installable on a target system given public key, apt config line, and package(s) name (e.g. `regolith-session-sway`).   |
-| `upload-files` | Upload debian package and source files to the publish server.   |
+| `upload-files` | Upload files with given pattern from a path to the server. The target to upload files to is defined with a combination of `base` and `folder` which will be the format of `<upload-to-base>/<upload-to-folder>`.   |
 <!-- AUTO_GENERATE_END -->

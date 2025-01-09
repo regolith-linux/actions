@@ -1,46 +1,47 @@
-name: Upload Packages
+name: Upload Files
 description: |
-  Upload debian package and source files to the publish server.
+  Upload files with given pattern from a path to the server. The target to upload
+  files to is defined with a combination of `base` and `folder` which will be the
+  format of `<upload-to-base>/<upload-to-folder>`.
 
 inputs:
-  server-address:
-    description: "Publish Server IP address"
+  upload-from:
+    description: "Path on disk to upload files from"
     required: true
-  server-username:
-    description: "Server SSH username"
+    default: "/build/publish/"
+  upload-pattern:
+    description: "File pattern to use to upload from"
     required: true
-  server-ssh-key:
-    description: "Server SSH private key"
-    required: true
-  source-path:
-    description: "Path on disk to upload packages from"
-    required: true
-  packages-path:
-    description: "Path on disk that conntains the packages"
+    default: "*"
+  upload-to-base:
+    description: "Base path on the server to upload to"
     required: true
     default: "/opt/archives/packages/"
-  package-name:
-    description: "Name of the folder to be created in 'packages-path'"
+  upload-to-folder:
+    description: "Name of the folder to upload into in 'upload-to-base'"
+    required: true
+  server-address:
+    description: "Server IP address or FQDN"
+    required: true
+  server-username:
+    description: "Server username to use for uploading"
     required: true
 
 runs:
   using: composite
   steps:
-    - name: Setup SSH agent
-      uses: webfactory/ssh-agent@v0.9.0
-      with:
-        ssh-private-key: ${{ inputs.server-ssh-key }}
-
-    - name: Environment Setup
-      shell: bash
-      run: ssh-keyscan -H ${{ inputs.server-address }} >> /home/regolith/.ssh/known_hosts
-
     - name: Upload Files
       shell: bash
       run: |
         set -e
 
+        UPLOAD_FROM="${{ inputs.upload-from }}"
+        UPLOAD_TO_BASE="${{ inputs.upload-to-base }}"
+        UPLOAD_TO_FOLDER="${{ inputs.upload-to-folder }}"
+
         rsync \
           -avzhH \
-          ${{ inputs.source-path }}/* \
-          ${{ inputs.server-username }}@${{ inputs.server-address }}:${{ inputs.packages-path }}/${{ inputs.package-name }}
+          --ignore-missing-args \
+          --mkpath \
+          ${UPLOAD_FROM%/}/${{ inputs.upload-pattern }} \
+          ${{ inputs.server-username }}@${{ inputs.server-address }}:${UPLOAD_TO_BASE%/}/${UPLOAD_TO_FOLDER%/}/

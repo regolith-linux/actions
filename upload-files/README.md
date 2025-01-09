@@ -1,41 +1,43 @@
-# Upload Packages
+# Upload Files
 
-Upload debian package and source files to the publish server.
+Upload files with given pattern from a path to the server. The target to upload
+files to is defined with a combination of `base` and `folder` which will be the
+format of `<upload-to-base>/<upload-to-folder>`.
 
 ## Usage
 
 ```yaml
 - uses: regolith-linux/actions/upload-files@main
   with:
-    # server-address is the IP address of the publish server.
+    # upload-from is the path on disk to upload files from.
+    #
+    # Required.
+    upload-from: "/build/publish/"
+
+    # upload-pattern is the file pattern to use to upload from.
+    #
+    # Required.
+    upload-pattern: "*"
+
+    # upload-to-base is the base path on the server to upload to.
+    #
+    # Required.
+    upload-to-base: "/opt/archives/packages/"
+
+    # upload-to-folder is the name of the folder to upload into in 'upload-to-base'.
+    #
+    # Required.
+    upload-to-folder: "..."
+
+    # server-address is the IP address or FQDN of the server.
     #
     # Required.
     server-address: "..."
 
-    # server-username is the server SSH username.
+    # server-username is the server username to use for uploading.
     #
     # Required.
     server-username: "..."
-
-    # server-ssh-key is the server SSH private key.
-    #
-    # Required.
-    server-ssh-key: "..."
-
-    # source-path is the path on disk to upload packages from.
-    #
-    # Required.
-    source-path: "..."
-
-    # packages-path is the path on disk that contains the packages.
-    #
-    # Required.
-    packages-path: "/opt/archives/packages/"
-
-    # package-name is the name of the folder to be created in 'packages-path'.
-    #
-    # Required.
-    package-name: "..."
 ```
 
 ## Scenarios
@@ -50,6 +52,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Package
+        id: build
         uses: regolith-linux/actions/build-package@main
         with:
           name: "foo-package"
@@ -59,12 +62,12 @@ jobs:
           suite: "unstable"
           component: "main"
           arch: "amd64"
-          gpg-key: "${{ secrets.GPG_PRIVATE_KEY }}"
 
       - name: Upload Files
         uses: regolith-linux/actions/upload-files@main
         with:
+          upload-from: "${{ steps.build.outputs.publish-path }}"
+          upload-to-folder: "foo-package"
           server-address: "${{ secrets.SERVER_IP_ADDRESS }}"
-          server-user: "${{ secrets.SERVER_SSH_USER }}"
-          package-name: "foo-package"
+          server-username: "${{ secrets.SERVER_SSH_USER }}"
 ```
