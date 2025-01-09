@@ -36,8 +36,11 @@ inputs:
 
 outputs:
   publish-path:
-    description: "The published path on Actions runner"
-    value: ${{ steps.builder.outputs.publish-path }}
+    description: "The path on disk that packages are published to"
+    value: ${{ steps.build.outputs.publish-path }}
+  buildlog-path:
+    description: "The path on disk that buildlogs are saved to"
+    value: ${{ steps.build.outputs.buildlog-path }}
 
 runs:
   using: composite
@@ -47,11 +50,10 @@ runs:
       uses: regolith-linux/actions/get-voulage@main
 
     - name: Build Package
-      id: builder
+      id: build
       shell: bash
       env:
         WORKSPACE_PATH: "${{ github.workspace }}"
-        PUBLISH_PATH: "/build/"
         VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
 
         PACKAGE_NAME: "${{ inputs.name }}"
