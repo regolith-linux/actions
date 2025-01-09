@@ -23,6 +23,13 @@ Import given GPG private key with its associated email and full name.
     gpg-name: Regolith Linux
 ```
 
+## Outputs
+
+| Name | Description | Example |
+|------|-------------|---------|
+| `gpg-email` | Email ID associated with the GPG Key | `regolith.linux@gmail.com` |
+| `gpg-name` | Full Name associated with the GPG Key | `Regolith Linux` |
+
 ## Scenarios
 
 ```yaml
