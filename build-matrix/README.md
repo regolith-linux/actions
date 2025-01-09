@@ -74,10 +74,12 @@ jobs:
         uses: regolith-linux/actions/build-package@main
         with:
           name: "foo-package"
-          repo: "https://github.com/${{ github.repository }}"
-          ref: "${{ github.ref }}"
           distro: "${{ matrix.distro }}"
           codename: "${{ matrix.codename }}"
+          stage: "unstable"
+          suite: "unstable"
+          component: "main"
+          arch: "${{ matrix.arch }}"
 ```
 
 [voulage]: https://github.com/regolith-linux/voulage/

@@ -37,10 +37,12 @@ jobs:
           VOULAGE_PATH: ${{ steps.voulage.outputs.path }}
         with:
           name: "foo-package"
-          repo: "https://github.com/${{ github.repository }}"
-          ref: "${{ github.ref }}"
           distro: "ubuntu"
           codename: "noble"
+          stage: "unstable"
+          suite: "unstable"
+          component: "main"
+          arch: "amd64"
 ```
 
 [voulage]: https://github.com/regolith-linux/voulage/

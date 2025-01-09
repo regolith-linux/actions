@@ -25,9 +25,6 @@ inputs:
   arch:
     description: "Regolith architectures (amd64, arm64)"
     required: true
-  gpg-key:
-    description: "GPG Private Key to import"
-    required: true
   gpg-email:
     description: "Email ID associated with the GPG Key"
     required: true
@@ -48,13 +45,6 @@ runs:
     - name: Get Voulage
       id: voulage
       uses: regolith-linux/actions/get-voulage@main
-
-    - name: Import GPG Key
-      uses: regolith-linux/actions/import-gpg@main
-      with:
-        gpg-key: "${{ inputs.gpg-key }}"
-        gpg-email: "${{ inputs.gpg-email }}"
-        gpg-name: "${{ inputs.gpg-name }}"
 
     - name: Build Package
       id: builder
