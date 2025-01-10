@@ -40,12 +40,6 @@ inputs:
     description: "Full Name associated with the GPG Key"
     required: true
     default: "Regolith Linux"
-  server-address:
-    description: "Server IP address or FQDN"
-    required: true
-  server-username:
-    description: "Server ssh username"
-    required: true
 
 runs:
   using: composite
@@ -58,7 +52,7 @@ runs:
       shell: bash
       run: |
         set -e
-        ssh ${{ inputs.server-username }}@${{ inputs.server-address }} "get-published-sources.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""
+        ssh ${{ env.server-username }}@${{ env.server-address }} "get-published-sources.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""
 
     - name: Pull Source Files
       shell: bash
@@ -76,7 +70,7 @@ runs:
           --include="*.debian.tar.xz" \
           --include="*.diff.gz" \
           --exclude="*" \
-          ${{ inputs.server-username }}@${{ inputs.server-address }}:${PULL_FROM_BASE%/}/${PULL_FROM_FOLDER%/}/ \
+          ${{ env.server-username }}@${{ env.server-address }}:${PULL_FROM_BASE%/}/${PULL_FROM_FOLDER%/}/ \
           /build/workspace/
 
     - name: Rebuild Sources
@@ -96,16 +90,17 @@ runs:
 
     - name: Upload Source Files
       uses: regolith-linux/actions/upload-files@main
+      env:
+        server-address: "${{ env.server-address }}"
+        server-username: "${{ env.server-username }}"
       with:
         upload-from: "/build/workspace/"
         upload-pattern: "*"
         upload-to-base: "${{ inputs.push-to-base }}"
         upload-to-folder: "${{ inputs.workspace-subfolder }}"
-        server-address: "${{ inputs.server-address }}"
-        server-username: "${{ inputs.server-username }}"
 
     - name: Cleanup Workspace
       shell: bash
       run: |
         set -e
-        ssh ${{ inputs.server-username }}@${{ inputs.server-address }} "cleanup-workspace.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""
+        ssh ${{ env.server-username }}@${{ env.server-address }} "cleanup-workspace.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""

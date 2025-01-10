@@ -10,6 +10,16 @@ format of `<upload-to-base>/<upload-to-folder>`.
 
 ```yaml
 - uses: regolith-linux/actions/upload-files@main
+  env:
+    # server-address is the IP address or FQDN of the server.
+    #
+    # Required.
+    server-address: "..."
+
+    # server-username is the server ssh username.
+    #
+    # Required.
+    server-username: "..."
   with:
     # upload-from is the path on disk to upload files from.
     #
@@ -30,16 +40,6 @@ format of `<upload-to-base>/<upload-to-folder>`.
     #
     # Required.
     upload-to-folder: "..."
-
-    # server-address is the IP address or FQDN of the server.
-    #
-    # Required.
-    server-address: "..."
-
-    # server-username is the server ssh username.
-    #
-    # Required.
-    server-username: "..."
 ```
 
 ## Scenarios
@@ -67,9 +67,10 @@ jobs:
 
       - name: Upload Files
         uses: regolith-linux/actions/upload-files@main
+        env:
+          server-address: "${{ secrets.SERVER_IP_ADDRESS }}"
+          server-username: "${{ secrets.SERVER_SSH_USER }}"
         with:
           upload-from: "${{ steps.build.outputs.publish-path }}"
           upload-to-folder: "foo-package"
-          server-address: "${{ secrets.SERVER_IP_ADDRESS }}"
-          server-username: "${{ secrets.SERVER_SSH_USER }}"
 ```
