@@ -1,7 +1,9 @@
+<!-- AUTO_GENERATE_START -->
 # Build Matrix of Supported OS
 
 Build a matrix of currently supported distros and codenames in encoded JSON list
-format. The list is being built out of `stage/unstable` folder of [voulage].
+format. The list is being built out of `stage/unstable` folder of [voulage](https://github.com/regolith-linux/voulage/).
+<!-- AUTO_GENERATE_END -->
 
 ## Usage
 

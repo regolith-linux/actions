@@ -1,3 +1,4 @@
+<!-- AUTO_GENERATE_START -->
 # Rebuild Sources
 
 Rebuild the source files.
@@ -7,6 +8,7 @@ file which previously was repacked without `/debian` folder in it.
 
 This will ensure one single .orig.tar.gz file can be used for all the packages of the
 same version and same component of different codenames.
+<!-- AUTO_GENERATE_END -->
 
 ## Usage
 

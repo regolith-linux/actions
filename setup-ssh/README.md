@@ -1,6 +1,8 @@
+<!-- AUTO_GENERATE_START -->
 # Setup SSH
 
-Setup SSH agen and add server keyscan to the known_host file.
+Setup SSH agent and add server keyscan to the known_hosts file.
+<!-- AUTO_GENERATE_END -->
 
 ## Usage
 

@@ -1,8 +1,10 @@
+<!-- AUTO_GENERATE_START -->
 # Upload Files
 
 Upload files with given pattern from a path to the server. The target to upload
 files to is defined with a combination of `base` and `folder` which will be the
 format of `<upload-to-base>/<upload-to-folder>`.
+<!-- AUTO_GENERATE_END -->
 
 ## Usage
 

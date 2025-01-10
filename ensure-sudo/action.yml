@@ -1,6 +1,6 @@
 name: Ensure Sudo
 description: |
-  Ensure sudo command is installed and available.
+  Ensure `sudo` command is installed and available.
 
 runs:
   using: composite

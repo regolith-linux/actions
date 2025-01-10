@@ -1,7 +1,9 @@
+<!-- AUTO_GENERATE_START -->
 # Test if `regolith-desktop` is Installable
 
 Test that `regolith-desktop` is installable on a target system given public key,
 `apt` config line, and package(s) name (e.g. `regolith-session-sway`).
+<!-- AUTO_GENERATE_END -->
 
 ## Usage
 
