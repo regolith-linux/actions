@@ -34,7 +34,7 @@ format of `<upload-to-base>/<upload-to-folder>`.
     # Required.
     server-address: "..."
 
-    # server-username is the server username to use for uploading.
+    # server-username is the server ssh username.
     #
     # Required.
     server-username: "..."

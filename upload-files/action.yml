@@ -24,7 +24,7 @@ inputs:
     description: "Server IP address or FQDN"
     required: true
   server-username:
-    description: "Server username to use for uploading"
+    description: "Server ssh username"
     required: true
 
 runs:
