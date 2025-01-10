@@ -42,8 +42,8 @@ RAW_BUILD_LOG="${WORKING_DIR}/buildlog/BUILD_LOG_${TARGET_ID}.raw.txt"
   | tee -a "${RAW_BUILD_LOG}"
 
 # generate changelog and sourcelog
-cat "${RAW_BUILD_LOG}" | grep ^CHLOG: | cut -c 7- > "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
-cat "${RAW_BUILD_LOG}" | grep ^SRCLOG: | cut -c 8- > "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+grep ^CHLOG: "${RAW_BUILD_LOG}" | cut -c 7- > "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
+grep ^SRCLOG: "${RAW_BUILD_LOG}" | cut -c 8- > "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
 
 # list the generated files for debugging purposes
 find "${WORKING_DIR}/publish"
@@ -57,4 +57,6 @@ cat "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
 
 # shellcheck disable=SC2086
 echo "publish-path=${WORKING_DIR}/publish/" >> $GITHUB_OUTPUT
+
+# shellcheck disable=SC2086
 echo "buildlog-path=${WORKING_DIR}/buildlog/" >> $GITHUB_OUTPUT

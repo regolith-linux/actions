@@ -33,4 +33,4 @@ if [ -n "${ONLY_PACKAGE}" ]; then
     command_arguments+=(--only-package "${ONLY_PACKAGE}")
 fi
 
-"${VOULAGE_PATH}/.github/scripts/rebuild-sources.sh" ${command_arguments[@]}
+"${VOULAGE_PATH}/.github/scripts/rebuild-sources.sh" "${command_arguments[@]}"
