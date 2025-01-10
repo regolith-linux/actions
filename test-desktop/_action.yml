@@ -1,7 +1,7 @@
-name: Test if regolith-desktop is Installable
+name: Test if `regolith-desktop` is Installable
 description: |
-  Test that regolith-desktop is installable on a target system given public key,
-  apt config line, and package(s) name (e.g. `regolith-session-sway`).
+  Test that `regolith-desktop` is installable on a target system given public key,
+  `apt` config line, and package(s) name (e.g. `regolith-session-sway`).
 
 inputs:
   apt-key-url:

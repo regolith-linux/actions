@@ -1,7 +1,9 @@
+<!-- AUTO_GENERATE_START -->
 # Build Package
 
 Build a package for speficied distro/codename/stage triplet. It uses package
 name, package repo, and package ref to checkout the code.
+<!-- AUTO_GENERATE_END -->
 
 ## Usage
 
@@ -58,7 +60,8 @@ name, package repo, and package ref to checkout the code.
 
 | Name | Description | Example |
 |------|-------------|---------|
-| `publish-path` | The published path on Actions runner | `/build/publish/` |
+| `publish-path` | The path on disk that packages are published to | `/build/publish/` |
+| `buildlog-path` | The path on disk that buildlogs are saved to | `/build/buildlog/` |
 
 ## Scenarios
 

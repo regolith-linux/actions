@@ -1,6 +1,7 @@
 name: Get Voulage
 description: |
-  Clone and fetch https://github.com/regolith-linux/voulage/ repository at given ref.
+  Clone and fetch [voulage](https://github.com/regolith-linux/voulage/) repository
+  at given ref.
 
 inputs:
   ref:

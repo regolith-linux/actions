@@ -1,8 +1,9 @@
+<!-- AUTO_GENERATE_START -->
 # Publish Repository
 
 Publish packages of supported distro(s), codename(s), and component(s) to a new
 or existing archive repository.
-
+<!-- AUTO_GENERATE_END -->
 
 ## Usage
 

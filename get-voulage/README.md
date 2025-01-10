@@ -1,6 +1,9 @@
+<!-- AUTO_GENERATE_START -->
 # Get Voulage
 
-Clone and fetch [voulage] repository at given `ref`.
+Clone and fetch [voulage](https://github.com/regolith-linux/voulage/) repository
+at given ref.
+<!-- AUTO_GENERATE_END -->
 
 ## Usage
 
@@ -44,5 +47,3 @@ jobs:
           component: "main"
           arch: "amd64"
 ```
-
-[voulage]: https://github.com/regolith-linux/voulage/

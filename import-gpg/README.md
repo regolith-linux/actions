@@ -1,6 +1,8 @@
+<!-- AUTO_GENERATE_START -->
 # Import GPG Key
 
 Import given GPG private key with its associated email and full name.
+<!-- AUTO_GENERATE_END -->
 
 ## Usage
 

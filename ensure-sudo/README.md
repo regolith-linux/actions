@@ -1,6 +1,8 @@
+<!-- AUTO_GENERATE_START -->
 # Ensure Sudo
 
 Ensure `sudo` command is installed and available.
+<!-- AUTO_GENERATE_END -->
 
 ## Usage
 

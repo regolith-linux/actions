@@ -1,0 +1,111 @@
+name: Rebuild Sources
+description: |
+  Rebuild the source files.
+
+  The `.dsc` and `.debian.tar.xz` files will be rebuilt out of exisiting `.orig.tar.gz`
+  file which previously was repacked without `/debian` folder in it.
+
+  This will ensure one single .orig.tar.gz file can be used for all the packages of the
+  same version and same component of different codenames.
+
+inputs:
+  pull-from-base:
+    description: "Base path on the server to pull packages from"
+    required: true
+    default: "/opt/archives/workspace/"
+  push-to-base:
+    description: "Base path on the server to push rebuils sources to"
+    required: true
+    default: "/opt/archives/packages/"
+  workspace-subfolder:
+    description: "workspace-subfolder is the name of the folder to use inside 'pull-from-base' and 'push-to-base'"
+    required: true
+  only-distro:
+    description: "A filter to only rebuild sources for this distro"
+    required: false
+  only-codename:
+    description: "A filter to only rebuild sources for this codename"
+    required: false
+  only-component:
+    description: "A filter to only rebuild sources for this component"
+    required: false
+  only-package:
+    description: "A filter to only rebuild sources for this package"
+    required: false
+  gpg-email:
+    description: "Email ID associated with the GPG Key"
+    required: true
+    default: "regolith.linux@gmail.com"
+  gpg-name:
+    description: "Full Name associated with the GPG Key"
+    required: true
+    default: "Regolith Linux"
+  server-address:
+    description: "Server IP address or FQDN"
+    required: true
+  server-username:
+    description: "Server ssh username"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Get Voulage
+      id: voulage
+      uses: regolith-linux/actions/get-voulage@main
+
+    - name: Prepare Source Files
+      shell: bash
+      run: |
+        set -e
+        ssh ${{ inputs.server-username }}@${{ inputs.server-address }} "get-published-sources.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""
+
+    - name: Pull Source Files
+      shell: bash
+      run: |
+        set -e
+
+        PULL_FROM_BASE="${{ inputs.pull-from-base }}"
+        PULL_FROM_FOLDER="${{ inputs.workspace-subfolder }}"
+
+        rsync \
+          -avzh \
+          --exclude="*.*/" \
+          --include="*/" \
+          --include="*.orig.tar.gz" \
+          --include="*.debian.tar.xz" \
+          --include="*.diff.gz" \
+          --exclude="*" \
+          ${{ inputs.server-username }}@${{ inputs.server-address }}:${PULL_FROM_BASE%/}/${PULL_FROM_FOLDER%/}/ \
+          /build/workspace/
+
+    - name: Rebuild Sources
+      shell: bash
+      env:
+        WORKSPACE_PATH: "/build/workspace/"
+        VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
+
+        ONLY_DISTRO: "${{ inputs.only-distro }}"
+        ONLY_CODENAME: "${{ inputs.only-codename }}"
+        ONLY_COMPONENT: "${{ inputs.only-component }}"
+        ONLY_PACKAGE: "${{ inputs.only-package }}"
+
+        GPG_EMAIL: "${{ inputs.gpg-email }}"
+        GPG_NAME: "${{ inputs.gpg-name }}"
+      run: $GITHUB_ACTION_PATH/entrypoint.sh
+
+    - name: Upload Source Files
+      uses: regolith-linux/actions/upload-files@main
+      with:
+        upload-from: "/build/workspace/"
+        upload-pattern: "*"
+        upload-to-base: "${{ inputs.push-to-base }}"
+        upload-to-folder: "${{ inputs.workspace-subfolder }}"
+        server-address: "${{ inputs.server-address }}"
+        server-username: "${{ inputs.server-username }}"
+
+    - name: Cleanup Workspace
+      shell: bash
+      run: |
+        set -e
+        ssh ${{ inputs.server-username }}@${{ inputs.server-address }} "cleanup-workspace.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""
