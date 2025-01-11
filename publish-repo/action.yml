@@ -4,16 +4,14 @@ description: |
   or existing archive repository.
 
 inputs:
-  server-address:
-    description: "Publish Server IP address"
-    required: true
-  server-user:
-    description: "Server SSH username"
-    required: true
-  packages-path:
-    description: "Path on disk that conntains the packages"
+  packages-path-base:
+    description: "Base path on the server to publish repository from"
     required: true
     default: "/opt/archives/packages/"
+  packages-path-subfolder:
+    description: "Name of the folder in 'packages-path-base' to publish repository from"
+    required: false
+    default: ""
   only-distro:
     description: "A filter to only publish repository for this distro"
     required: false
@@ -27,9 +25,30 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Publish Package
+    - name: Publish Package(s)
       shell: bash
       run: |
-        ssh-keyscan -H ${{ inputs.server-address }} >> ~/.ssh/known_hosts
-        ssh ${{ inputs.server-user }}@${{ inputs.server-address }} "publish-repos.sh \"${{ inputs.packages-path }}\" \"${{ inputs.only-distro }}\" \"${{ inputs.only-codename }}\" \"${{ inputs.only-component }}\""
-        ssh ${{ inputs.server-user }}@${{ inputs.server-address }} "find \"${{ inputs.packages-path }}\" "
+        PACKAGES_PATH_BASE="${{ inputs.packages-path-base }}"
+        PACKAGES_PATH_FOLDER="${{ inputs.packages-path-subfolder }}"
+
+        PACKAGES_PATH="${PACKAGES_PATH_BASE%/}"
+
+        if [ -n "$PACKAGES_PATH_FOLDER" ]; then
+          PACKAGES_PATH+="/${PACKAGES_PATH_FOLDER%/}"
+        fi
+
+        ssh ${{ env.server-username }}@${{ env.server-address }} "publish-repos.sh \"${PACKAGES_PATH}/\" \"${{ inputs.only-distro }}\" \"${{ inputs.only-codename }}\" \"${{ inputs.only-component }}\""
+
+    - name: Failed Publish Package(s)
+      shell: bash
+      run: |
+        PACKAGES_PATH_BASE="${{ inputs.packages-path-base }}"
+        PACKAGES_PATH_FOLDER="${{ inputs.packages-path-subfolder }}"
+
+        PACKAGES_PATH="${PACKAGES_PATH_BASE%/}"
+
+        if [ -n "$PACKAGES_PATH_FOLDER" ]; then
+          PACKAGES_PATH+="/${PACKAGES_PATH_FOLDER%/}"
+        fi
+
+        ssh ${{ env.server-username }}@${{ env.server-address }} "find \"${PACKAGES_PATH}/\""
