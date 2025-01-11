@@ -9,21 +9,24 @@ or existing archive repository.
 
 ```yaml
 - uses: regolith-linux/actions/publish-repo@main
-  with:
+  env:
     # server-address is the IP address of the publish server.
     #
     # Required.
     server-address: "..."
-    
-    # server-user is the server SSH username.
+
+    # server-username is the server SSH username.
     #
     # Required.
-    server-user: "..."
-    
-    # packages-path is the path on disk that contains the packages.
+    server-username: "..."
+  with:
+    # packages-path-base is the base path on the server to publish repository from.
     #
     # Required.
-    packages-path: "/opt/archives/packages/"
+    packages-path-base: "/opt/archives/packages/"
+
+    # packages-path-subfolder is the name of the folder in 'packages-path-base' to publish repository from.
+    packages-path-subfolder: ""
     
     # only-distro is a filter to only publish repository for this distro.
     only-distro: "..."
@@ -38,9 +41,22 @@ or existing archive repository.
 ## Scenarios
 
 ```yaml
-- uses: regolith-linux/actions/publish-repo@main
-  with:
-    server-address: "${{ secrets.SERVER_IP_ADDRESS }}"
-    server-user: "${{ secrets.SERVER_SSH_USER }}"
-    packages-path: "/opt/archives/packages/"
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    container: "ubuntu:noble"
+    steps:
+      - name: Setup SSH
+        uses: regolith-linux/actions/setup-ssh@main
+        with:
+          ssh-host: "${{ secrets.KAMATERA_HOSTNAME2 }}"
+          ssh-key: "${{ secrets.KAMATERA_SSH_KEY }}"
+
+      - name: Publish Repo
+        uses: regolith-linux/actions/publish-repo@main
+        env:
+          server-address: "${{ secrets.SERVER_IP_ADDRESS }}"
+          server-username: "${{ secrets.SERVER_SSH_USER }}"
+        with:
+          packages-path-subfolder: "foo-package"
 ```
