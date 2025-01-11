@@ -16,7 +16,7 @@ jobs:
         id: builder
         uses: regolith-linux/actions/build-matrix@main
         with:
-          name: "${{ github.event.repository.name }}"
+          name: "xdg-desktop-portal-regolith"
           ref: "main"
           arch: "amd64"
           stage: "unstable"
