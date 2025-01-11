@@ -8,41 +8,18 @@ on:
 jobs:
   matrix-builder:
     runs-on: regolith-amd64
+    container: "ghcr.io/regolith-linux/ci-ubuntu:noble-amd64"
     outputs:
       includes: ${{ steps.builder.outputs.includes }}
-    # outputs:
-    #   stages: ${{ steps.builder.outputs.stages }}
-    #   distros: ${{ steps.builder.outputs.distros }}
-    #   codenames: ${{ steps.builder.outputs.codenames }}
-    #   arches: ${{ steps.builder.outputs.arches }}
-    #   suites: ${{ steps.builder.outputs.suites }}
-    #   runners: ${{ steps.builder.outputs.runners }}
-    #   includes: ${{ steps.builder.outputs.includes }}
-    #   excludes: ${{ steps.builder.outputs.excludes }}
     steps:
-      - name: Calculate Matrix
+      - name: Build Matrix
         id: builder
-        run: |
-          INCLUDES=()
-
-          INCLUDES+=($(jq -n -c --arg distro "debian" --arg codename "bookworm" --arg arch "amd64" '$ARGS.named'))
-          INCLUDES+=($(jq -n -c --arg distro "debian" --arg codename "testing" --arg arch "amd64" '$ARGS.named'))
-          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "jammy" --arg arch "amd64" '$ARGS.named'))
-          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "noble" --arg arch "amd64" '$ARGS.named'))
-          INCLUDES+=($(jq -n -c --arg distro "ubuntu" --arg codename "oracular" --arg arch "amd64" '$ARGS.named'))
-
-          echo "includes=$(jq -n -c "[$(printf '%s\n' "${INCLUDES[@]}" | paste -sd,)]" '$ARGS.named')" >> $GITHUB_OUTPUT
-
-    # steps:
-    #   - name: Build Matrix
-    #     id: builder
-    #     uses: regolith-linux/actions/build-matrix@enhance-build-matrix
-    #     with:
-    #       name: "${{ github.event.repository.name }}"
-    #       ref: "${{ github.base_ref }}"
-    #       # arch: "amd64"
-    #       arch: "amd64 arm64"
-    #       stage: "unstable"
+        uses: regolith-linux/actions/build-matrix@main
+        with:
+          name: "${{ github.event.repository.name }}"
+          ref: "main"
+          arch: "amd64"
+          stage: "unstable"
 
   # test:
   #   runs-on: ubuntu-24.04
@@ -73,8 +50,8 @@ jobs:
     runs-on: ["regolith-${{ matrix.arch }}"]
     # runs-on: ubuntu-24.04
     # runs-on: [self-hosted, Linux, "${{ matrix.arch }}", noble] 
-    # container: "${{ matrix.distro }}:${{ matrix.codename }}"
     needs: matrix-builder
+    container: "ghcr.io/regolith-linux/ci-${{ matrix.distro }}:${{ matrix.codename }}-${{ matrix.arch }}"
     strategy:
       fail-fast: false
       matrix:
