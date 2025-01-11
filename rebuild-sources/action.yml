@@ -50,15 +50,11 @@ runs:
 
     - name: Prepare Source Files
       shell: bash
-      run: |
-        set -e
-        ssh ${{ env.server-username }}@${{ env.server-address }} "get-published-sources.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""
+      run: ssh ${{ env.server-username }}@${{ env.server-address }} "get-published-sources.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""
 
     - name: Pull Source Files
       shell: bash
       run: |
-        set -e
-
         PULL_FROM_BASE="${{ inputs.pull-from-base }}"
         PULL_FROM_FOLDER="${{ inputs.workspace-subfolder }}"
 
@@ -101,6 +97,4 @@ runs:
 
     - name: Cleanup Workspace
       shell: bash
-      run: |
-        set -e
-        ssh ${{ env.server-username }}@${{ env.server-address }} "cleanup-workspace.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""
+      run: ssh ${{ env.server-username }}@${{ env.server-address }} "cleanup-workspace.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""

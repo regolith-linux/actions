@@ -27,8 +27,6 @@ runs:
     - name: Upload Files
       shell: bash
       run: |
-        set -e
-
         UPLOAD_FROM="${{ inputs.upload-from }}"
         UPLOAD_TO_BASE="${{ inputs.upload-to-base }}"
         UPLOAD_TO_FOLDER="${{ inputs.upload-to-folder }}"
