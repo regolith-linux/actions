@@ -30,8 +30,6 @@ runs:
     - name: Publish Package
       shell: bash
       run: |
-        set -e
-
         ssh-keyscan -H ${{ inputs.server-address }} >> ~/.ssh/known_hosts
         ssh ${{ inputs.server-user }}@${{ inputs.server-address }} "publish-repos.sh \"${{ inputs.packages-path }}\" \"${{ inputs.only-distro }}\" \"${{ inputs.only-codename }}\" \"${{ inputs.only-component }}\""
         ssh ${{ inputs.server-user }}@${{ inputs.server-address }} "find \"${{ inputs.packages-path }}\" "

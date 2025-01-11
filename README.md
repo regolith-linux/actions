@@ -16,5 +16,6 @@ A collection of reusable Github Actions workflows.
 | `rebuild-sources` | Rebuild the source files.  The `.dsc` and `.debian.tar.xz` files will be rebuilt out of exisiting `.orig.tar.gz` file which previously was repacked without `/debian` folder in it.  This will ensure one single .orig.tar.gz file can be used for all the packages of the same version and same component of different codenames.  |
 | `setup-ssh` | Setup SSH agent and add server keyscan to the known_hosts file.  |
 | `test-desktop` | Test that `regolith-desktop` is installable on a target system given public key, `apt` config line, and package(s) name (e.g. `regolith-session-sway`).  |
+| `update-manifest` | Update and upload the manifest file for the package that is just built with package name, repo, ref, and sha.  |
 | `upload-files` | Upload files with given pattern from a path to the server. The target to upload files to is defined with a combination of `base` and `folder` which will be the format of `<upload-to-base>/<upload-to-folder>`.  |
 <!-- AUTO_GENERATE_END -->

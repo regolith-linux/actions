@@ -1,0 +1,62 @@
+name: Update Manifest
+description: |
+  Update and upload the manifest file for the package that is just built with
+  package name, repo, ref, and sha.
+
+inputs:
+  name:
+    description: "Name of the package to update the manifest for"
+    required: true
+  repo:
+    description: "Public git repository URL of the package"
+    required: true
+  ref:
+    description: "Git repository ref that the package was built at (e.g. branch, tag, or hash)"
+    required: true
+  sha:
+    description: "Commit SHA of the repository that the package was built at"
+    required: true
+  distro:
+    description: "Target Distro (debian, ubuntu)"
+    required: true
+  codename:
+    description: "Target Codename (e.g. focal, bullseye)"
+    required: true
+  suite:
+    description: "Regolith package archive suite (e.g. unstable, testing, stable)"
+    required: true
+  component:
+    description: "Regolith package archive component (e.g. main, v3.2, v3.1)"
+    required: true
+  arch:
+    description: "Regolith architectures (amd64, arm64)"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Download Manifest
+      shell: bash
+      run: wget -P /build/manifests/ "http://archive.regolith-desktop.com/manifests/${{ inputs.distro }}/${{ inputs.codename }}/${{ inputs.suite }}-${{ inputs.component }}/${{ inputs.arch }}/manifest.txt" || true
+
+    - name: Update Manifest
+      shell: bash
+      run: |
+        touch /build/manifests/manifest.txt
+
+        if [ $(grep "^${{ inputs.name }} " /build/manifests/manifest.txt | wc -l) == 0 ]; then
+          echo "${{ inputs.name }} ${{ inputs.repo }} ${{ inputs.ref }} ${{ inputs.sha }}" >> /build/manifests/manifest.txt
+        fi
+
+        sed -i -E "s|^${{ inputs.name }}[[:space:]](.*)$|${{ inputs.name }} ${{ inputs.repo }} ${{ inputs.ref }} ${{ inputs.sha }}|g" /build/manifests/manifest.txt
+
+    - name: Upload Manifest
+      uses: regolith-linux/actions/upload-files@main
+      env:
+        server-address: "${{ env.server-address }}"
+        server-username: "${{ env.server-username }}"
+      with:
+        upload-from: "/build/manifests/"
+        upload-pattern: "manifest.txt"
+        upload-to-base: "/opt/archives/manifests/"
+        upload-to-folder: "${{ inputs.distro }}/${{ inputs.codename }}/${{ inputs.suite }}-${{ inputs.component }}/${{ inputs.arch }}/"

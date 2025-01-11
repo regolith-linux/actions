@@ -14,6 +14,16 @@ same version and same component of different codenames.
 
 ```yaml
 - uses: regolith-linux/actions/rebuild-sources@main
+  env:
+    # server-address is the IP address of the publish server.
+    #
+    # Required.
+    server-address: "..."
+
+    # server-username is the server SSH username.
+    #
+    # Required.
+    server-username: "..."
   with:
     # pull-from-base is the base path on the server to pull packages from.
     #
@@ -51,16 +61,6 @@ same version and same component of different codenames.
     #
     # Required.
     gpg-name: "Regolith Linux"
-
-    # server-address is the IP address of the publish server.
-    #
-    # Required.
-    server-address: "..."
-    
-    # server-user is the server ssh username.
-    #
-    # Required.
-    server-user: "..."
 ```
 
 ## Scenarios
@@ -84,6 +84,9 @@ jobs:
 
       - name: Rebuild Sources
         uses: regolith-linux/actions/rebuild-sources@main
+        env:
+          server-address: "${{ secrets.SERVER_IP_ADDRESS }}"
+          server-username: "${{ secrets.SERVER_SSH_USER }}"
         with:
           package-name: "foo-package"
           only-component: "unstable"

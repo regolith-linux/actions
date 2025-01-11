@@ -20,12 +20,6 @@ inputs:
   upload-to-folder:
     description: "Name of the folder to upload into in 'upload-to-base'"
     required: true
-  server-address:
-    description: "Server IP address or FQDN"
-    required: true
-  server-username:
-    description: "Server ssh username"
-    required: true
 
 runs:
   using: composite
@@ -33,8 +27,6 @@ runs:
     - name: Upload Files
       shell: bash
       run: |
-        set -e
-
         UPLOAD_FROM="${{ inputs.upload-from }}"
         UPLOAD_TO_BASE="${{ inputs.upload-to-base }}"
         UPLOAD_TO_FOLDER="${{ inputs.upload-to-folder }}"
@@ -44,4 +36,4 @@ runs:
           --ignore-missing-args \
           --mkpath \
           ${UPLOAD_FROM%/}/${{ inputs.upload-pattern }} \
-          ${{ inputs.server-username }}@${{ inputs.server-address }}:${UPLOAD_TO_BASE%/}/${UPLOAD_TO_FOLDER%/}/
+          ${{ env.server-username }}@${{ env.server-address }}:${UPLOAD_TO_BASE%/}/${UPLOAD_TO_FOLDER%/}/

@@ -35,9 +35,10 @@ jobs:
 
       - name: Upload Files
         uses: regolith-linux/actions/upload-files@main
+        env:
+          server-address: "${{ secrets.SERVER_IP_ADDRESS }}"
+          server-username: "${{ secrets.SERVER_SSH_USER }}"
         with:
           upload-from: "/path/fo/publish/"
           upload-to-folder: "foo-package"
-          server-address: "${{ secrets.SERVER_IP_ADDRESS }}"
-          server-username: "${{ secrets.SERVER_SSH_USER }}"
 ```
