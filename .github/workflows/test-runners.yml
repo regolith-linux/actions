@@ -8,7 +8,7 @@ on:
 jobs:
   matrix-builder:
     runs-on: regolith-amd64
-    container: "ghcr.io/regolith-linux/ci-ubuntu:noble-amd64"
+    # container: "ghcr.io/regolith-linux/ci-ubuntu:noble-amd64"
     outputs:
       includes: ${{ steps.builder.outputs.includes }}
     steps:
