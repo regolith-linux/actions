@@ -10,15 +10,10 @@ package name, repo, ref, and sha.
 ```yaml
 - uses: regolith-linux/actions/update-manifest@main
   env:
-    # server-address is the IP address of the publish server.
+    # GITHUB_TOKEN is used to commit and push to Voulage.
     #
     # Required.
-    server-address: "..."
-
-    # server-username is the server SSH username.
-    #
-    # Required.
-    server-username: "..."
+    GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
   with:
     # name of the package to update the manifest for.
     #
@@ -40,15 +35,10 @@ package name, repo, ref, and sha.
     # Required.
     sha: "..."
 
-    # distro is the target distro (debian, ubuntu).
+    # matrix is encoded JSON list of target distro, codename, and architecture
     #
     # Required.
-    distro: "..."
-
-    # codename is the target codename (e.g. focal, bullseye).
-    #
-    # Required.
-    codename: "..."
+    matrix: "..."
 
     # suite is Regolith package archive suite (e.g. unstable, testing, stable).
     #
@@ -59,11 +49,6 @@ package name, repo, ref, and sha.
     #
     # Required.
     component: "..."
-
-    # arch is Regolith architectures (amd64, arm64)
-    #
-    # Required.
-    arch: "..."
 ```
 
 ## Scenarios
@@ -91,16 +76,13 @@ jobs:
       - name: Update Manifest
         uses: regolith-linux/actions/update-manifest@main
         env:
-          server-address: "${{ secrets.SERVER_IP_ADDRESS }}"
-          server-username: "${{ secrets.SERVER_SSH_USER }}"
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         with:
           name: "foo-package"
           repo: "${{ github.server_url }}/${{ github.repository }}.git"
           ref: "${{ github.ref }}"
           sha: "${{ github.sha }}"
-          distro: "ubuntu"
-          codename: "noble"
+          matrix: "[{"distro":"ubuntu","codename":"noble","arch":"amd64"}]"
           suite: "unstable"
           component: "main"
-          arch: "amd64"
 ```
