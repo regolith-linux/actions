@@ -5,6 +5,10 @@ set -e
 VOULAGE_PATH="/tmp/voulage-actions-repo"
 VOULAGE_REPO="https://github.com/regolith-linux/voulage.git"
 
+if [ -n "$GITHUB_TOKEN" ]; then
+  git config --global "url.https://git:${GITHUB_TOKEN}@github.com/.insteadOf" https://github.com/
+fi
+
 if [ -z "$VOULAGE_REF" ]; then
   echo "Error: ref is missing"
   exit 1
