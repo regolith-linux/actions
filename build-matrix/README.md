@@ -41,6 +41,7 @@ format. The list is being built out of `stage/unstable` folder of [voulage](http
 | Name | Description | Example |
 |------|-------------|---------|
 | `includes` | Encoded JSON list of matrix `include` items | <pre>[{<br>&emsp;&emsp;"distro": "ubuntu",<br>&emsp;&emsp;"codename": "noble",<br>&emsp;&emsp;"arch": "amd64"<br>}, {<br>&emsp;&emsp;"distro": "ubuntu",<br>&emsp;&emsp;"codename": "oracular",<br>&emsp;&emsp;"arch": "amd64"<br>}]</pre> |
+| `runners` | Encoded JSON list of runners runs-on labels | <pre>{<br>&emsp;&emsp;"amd64":"ubuntu-24.04",<br>&emsp;&emsp;"arm64":"ubuntu-24.04-arm"<br>}</pre> |
 
 ## Scenarios
 
