@@ -16,11 +16,8 @@ inputs:
   sha:
     description: "Commit SHA of the repository that the package was built at"
     required: true
-  distro:
-    description: "Target Distro (debian, ubuntu)"
-    required: true
-  codename:
-    description: "Target Codename (e.g. focal, bullseye)"
+  matrix:
+    description: "Encoded JSON list of target distro, codename, and architecture"
     required: true
   suite:
     description: "Regolith package archive suite (e.g. unstable, testing, stable)"
@@ -28,35 +25,37 @@ inputs:
   component:
     description: "Regolith package archive component (e.g. main, v3.2, v3.1)"
     required: true
-  arch:
-    description: "Regolith architectures (amd64, arm64)"
-    required: true
 
 runs:
   using: composite
   steps:
-    - name: Download Manifest
-      shell: bash
-      run: wget -P /build/manifests/ "http://archive.regolith-desktop.com/manifests/${{ inputs.distro }}/${{ inputs.codename }}/${{ inputs.suite }}-${{ inputs.component }}/${{ inputs.arch }}/manifest.txt" || true
+    - name: Get Voulage
+      id: voulage
+      uses: regolith-linux/actions/get-voulage@main
 
     - name: Update Manifest
       shell: bash
-      run: |
-        touch /build/manifests/manifest.txt
-
-        if [ $(grep "^${{ inputs.name }} " /build/manifests/manifest.txt | wc -l) == 0 ]; then
-          echo "${{ inputs.name }} ${{ inputs.repo }} ${{ inputs.ref }} ${{ inputs.sha }}" >> /build/manifests/manifest.txt
-        fi
-
-        sed -i -E "s|^${{ inputs.name }}[[:space:]](.*)$|${{ inputs.name }} ${{ inputs.repo }} ${{ inputs.ref }} ${{ inputs.sha }}|g" /build/manifests/manifest.txt
-
-    - name: Upload Manifest
-      uses: regolith-linux/actions/upload-files@main
       env:
-        server-address: "${{ env.server-address }}"
-        server-username: "${{ env.server-username }}"
+        VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
+
+        NAME: "${{ inputs.name }}"
+        REPO: "${{ inputs.repo }}"
+        REF: "${{ inputs.ref }}"
+        SHA: "${{ inputs.sha }}"
+        MATRIX: "${{ inputs.matrix }}"
+        SUITE: "${{ inputs.suite }}"
+        COMPONENT: "${{ inputs.component }}"
+      run: $GITHUB_ACTION_PATH/entrypoint.sh
+
+    - name: Push Manifest Changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      env:
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
       with:
-        upload-from: "/build/manifests/"
-        upload-pattern: "manifest.txt"
-        upload-to-base: "/opt/archives/manifests/"
-        upload-to-folder: "${{ inputs.distro }}/${{ inputs.codename }}/${{ inputs.suite }}-${{ inputs.component }}/${{ inputs.arch }}/"
+        repository: "${{ steps.voulage.outputs.path }}"
+        branch: "main"
+        file_pattern: "*"
+        commit_message: "chore: update ${{ inputs.suite }} manifest for ${{ inputs.name }}"
+        commit_user_name: regolith-bot
+        commit_user_email: bot@regolith-desktop.com
+        commit_author: "regolith-bot <bot@regolith-desktop.com>"
