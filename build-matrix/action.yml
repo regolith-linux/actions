@@ -25,6 +25,9 @@ outputs:
   includes:
     description: "The serialized JSON list of matrix include items"
     value: ${{ steps.builder.outputs.includes }}
+  runners:
+    description: "The serialized JSON list of runners runs-on labels"
+    value: ${{ steps.builder.outputs.runners }}
 
 runs:
   using: composite
