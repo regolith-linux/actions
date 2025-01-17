@@ -67,7 +67,7 @@ generate_tag_name() {
   esac
 
   if [ "$unsupported_ref" == "true" ] && [ "$unsupported_combo" == "true" ]; then
-    echo "error: '${PACKAGE_REF}' is not a valid ref to release from"
+    echo -e "\033[0;31m'${PACKAGE_REF}' is not a valid ref to release from.\033[0m"
     return 1
   fi
 
@@ -78,16 +78,16 @@ process_model() {
   # model_sub_path can be empty, or ends with a slash
   local model_sub_path=$1
 
-  echo "= Processing '${PACKAGE_NAME}' in 'unstable/${model_sub_path}'"
+  echo -e "\033[0;34mProcessing '${PACKAGE_NAME}' in 'unstable/${model_sub_path}'\033[0m"
 
   if ! get_model "unstable/${model_sub_path}"; then
-    echo "  skip further processing"
+    echo "Skip further processing."
     echo ""
     return
   fi
 
   if ! update_model "testing/${model_sub_path}"; then
-    echo "  update package at 'testing/${model_sub_path}' failed"
+    echo -e "\033[0;31mUpdate package at 'testing/${model_sub_path}' failed.\033[0m"
     echo ""
     return
   fi
@@ -106,7 +106,7 @@ get_model() {
     return 1
   fi
 
-  echo "  looking for package in model"
+  echo "Looking for package in model..."
 
   packages=$(jq -r '.packages' "$model_file")
   has_package=$(echo "$packages" | jq 'has("'"${PACKAGE_NAME}"'")')
@@ -116,23 +116,24 @@ get_model() {
 
     # Package is explictly set to null. Skip it.
     if [ "$package" == "null" ]; then
-      echo "  package is explicitly set to null"
+      echo "Package is explicitly set to null."
       return 1
     else
       ref=$(echo "$package" | jq -r '.ref')
 
       if [ "$ref" != "$PACKAGE_REF" ]; then
-        echo "  model ref ($ref) and requested ref ($PACKAGE_REF) don't match"
+        echo "Model ref ($ref) and requested ref ($PACKAGE_REF) don't match."
         return 1
       fi
 
       # This is the only place that the process should continue.
       # Nothing needs to be done on this line, the functions only
       # needs to return normally.
+      echo "Package found."
       return 0
     fi
   else
-    echo "  package not found"
+    echo "Package not found."
     return 1
   fi
 }
@@ -144,7 +145,7 @@ update_model() {
   local model_path="stage/${stage_path%/}/"
   local model_file="${model_path%/}/package-model.json"
 
-  echo "  updating package in 'testing/${model_sub_path}'"
+  echo "Updating package in 'testing/${model_sub_path}'."
 
   mkdir -p "${model_path}"
   touch "${model_path%/}/package-model.json"
@@ -157,7 +158,7 @@ update_model() {
     mv "$model_file.tmp" "$model_file"
   fi
 
-  echo "  updated package ref to ${RELEASE_VERSION}"
+  echo "Updated package ref to '${RELEASE_VERSION}'."
 }
 
 main() {
@@ -185,7 +186,7 @@ main() {
   echo "Release name: ${RELEASE_VERSION}"
   echo ""
 
-  echo "= Looking for release '${RELEASE_VERSION}' in ${PACKAGE_REPO}"
+  echo -e "\033[0;34mLooking for release '${RELEASE_VERSION}' in ${PACKAGE_REPO}\033[0m"
 
   # current tag does exist in the repository, do not recreate it again
   if [ "$(git tag --list "${RELEASE_VERSION}" | wc -l)" != 0 ] ; then
