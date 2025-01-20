@@ -21,6 +21,8 @@ generate_tag_name() {
   full_version=$(dpkg-parsechangelog --show-field Version)
   release_version="v${full_version}"
 
+  local unsupported_ref="false"
+
   case "$PACKAGE_REF" in
     # default main/master branches ~ convention is main
     "main"|"master")                              ;;
@@ -35,9 +37,13 @@ generate_tag_name() {
     # library/platform specific branches ~ convention is <library-name>-<version>
     "regolith/1%43.0-1")                          release_version+="-gnome-43" ;;
     "regolith/46")                                release_version+="-gnome-46" ;;
+
+    # unknown package ref
+    *) unsupported_ref="true" ;;
   esac
 
   local separator=":::"
+  local unsupported_combo="false"
 
   # Miscellaneous edge cases
   case "${PACKAGE_NAME}${separator}${PACKAGE_REF}" in
@@ -55,7 +61,15 @@ generate_tag_name() {
     #
     # Deprecated.
     "xcb-util:::applied/ubuntu/groovy")           release_version="" ;;
+
+    # unknown package name and ref combo
+    *) unsupported_combo="true" ;;
   esac
+
+  if [ "$unsupported_ref" == "true" ] && [ "$unsupported_combo" == "true" ]; then
+    echo "error: '${PACKAGE_REF}' is not a valid ref to release from"
+    return 1
+  fi
 
   RELEASE_VERSION="$release_version"
 }
@@ -147,7 +161,9 @@ update_model() {
 }
 
 main() {
-  generate_tag_name
+  if ! generate_tag_name; then
+    exit 1
+  fi
 
   if [ -z "$RELEASE_VERSION" ]; then
     echo "error: could not determine the release version"
