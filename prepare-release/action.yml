@@ -1,0 +1,45 @@
+name: Prepeare Release
+description: |
+  Extract the version out of `debian/changelog` file and pass it through the tag
+  generator to determine the actual release version. Update corresponding `testing`
+  package models with that release version for the provided package.
+
+inputs:
+  name:
+    description: "Name of the package to create a tag and release for"
+    required: true
+  repo:
+    description: "Public git repository URL of the package"
+    required: true
+  ref:
+    description: "Git repository ref to tag and release from (e.g. branch, tag, or hash)"
+    required: true
+
+outputs:
+  release-exists:
+    description: "A boolean indicating if the release already exists in the GitHub repo or not"
+    value: ${{ steps.prepare.outputs.release-exists }}
+  release-version:
+    description: "The full release version extracted from debian/changelog and additional slugs if required"
+    value: ${{ steps.prepare.outputs.release-version }}
+  voulage-path:
+    description: "The path voulage is cloned into"
+    value: ${{ steps.voulage.outputs.path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Get Voulage
+      id: voulage
+      uses: regolith-linux/actions/get-voulage@main
+
+    - name: Prepare Release
+      id: prepare
+      shell: bash
+      env:
+        VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
+
+        PACKAGE_NAME: "${{ inputs.name }}"
+        PACKAGE_REPO: "${{ inputs.repo }}"
+        PACKAGE_REF: "${{ inputs.ref }}"
+      run: $GITHUB_ACTION_PATH/entrypoint.sh
