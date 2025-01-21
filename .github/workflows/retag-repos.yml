@@ -1,0 +1,22 @@
+name: Re-tag All the Repos
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Re-tag Repos
+        env:
+          GITHUB_TOKEN: ${{ secrets.ORG_BROADCAST_TOKEN }}
+        run: ./.github/scripts/retag-all-repos.sh
+
+      - name: Upload Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: result-log
+          path: "/tmp/regolith-workspace/logs/result-*.log"
