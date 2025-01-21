@@ -61,6 +61,11 @@ process_model() {
   while IFS='' read -r package; do
     package_name="$package"
 
+    # Exclude regolith-ftue because it's being rejected at pushing v2.1.3
+    if [ "$package_name" == "regolith-ftue" ]; then
+      continue
+    fi
+
     pacakge_repo=$(jq -r ".packages.\"$package\".source" "$model_file")
     package_ref=$(jq -r ".packages.\"$package\".ref" "$model_file")
 
