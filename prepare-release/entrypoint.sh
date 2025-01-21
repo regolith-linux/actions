@@ -15,11 +15,11 @@ RELEASE_EXISTS=""
 RELEASE_VERSION=""
 
 generate_tag_name() {
+  local short_version=""
   local full_version=""
-  local release_version=""
 
-  full_version=$(dpkg-parsechangelog --show-field Version)
-  release_version="v${full_version}"
+  short_version=$(dpkg-parsechangelog --show-field Version)
+  full_version=$(echo "v${short_version}" | sed 's/:/./g' | sed 's/[\~\^\?\[\*]/-/g')
 
   local unsupported_ref="false"
 
@@ -28,15 +28,15 @@ generate_tag_name() {
     "main"|"master")                              ;;
 
     # distro/codename specific branches ~ convention is <distro>-<codename>
-    "ubuntu-jammy"|"ubuntu/jammy")                release_version+="-ubuntu-jammy" ;;
-    "ubuntu-focal"|"ubuntu/focal")                release_version+="-ubuntu-focal" ;;
-    "debian-bullseye")                            release_version+="-debian-bullseye" ;;
-    "debian-testing"|"debian/testing")            release_version+="-debian-testing" ;;
-    "debian-bookworm"|"debian-bookworm-compat")   release_version+="-debian-bookworm" ;;
+    "ubuntu-jammy"|"ubuntu/jammy")                full_version+="-ubuntu-jammy" ;;
+    "ubuntu-focal"|"ubuntu/focal")                full_version+="-ubuntu-focal" ;;
+    "debian-bullseye")                            full_version+="-debian-bullseye" ;;
+    "debian-testing"|"debian/testing")            full_version+="-debian-testing" ;;
+    "debian-bookworm"|"debian-bookworm-compat")   full_version+="-debian-bookworm" ;;
 
     # library/platform specific branches ~ convention is <library-name>-<version>
-    "regolith/1%43.0-1")                          release_version+="-gnome-43" ;;
-    "regolith/46")                                release_version+="-gnome-46" ;;
+    "regolith/1%43.0-1")                          full_version+="-gnome-43" ;;
+    "regolith/46")                                full_version+="-gnome-46" ;;
 
     # unknown package ref
     *) unsupported_ref="true" ;;
@@ -48,19 +48,19 @@ generate_tag_name() {
   # Miscellaneous edge cases
   case "${PACKAGE_NAME}${separator}${PACKAGE_REF}" in
     "fonts-nerd-fonts:::debian")                  ;;
-    "i3status-rs:::ubuntu/v0.22.0")               release_version+="-ubuntu-jammy" ;;
+    "i3status-rs:::ubuntu/v0.22.0")               full_version+="-ubuntu-jammy" ;;
     "i3status-rs:::ubuntu/v0.32.1")               ;;
     "picom:::debian-v9")                          ;;
     "regolith-rofi-config:::i3cp")                ;;
-    "sway-regolith:::packaging/v1.7-regolith")    release_version+="-ubuntu-jammy" ;;
-    "sway-regolith:::packaging/v1.8-regolith")    release_version+="-debian-testing" ;;
+    "sway-regolith:::packaging/v1.7-regolith")    full_version+="-ubuntu-jammy" ;;
+    "sway-regolith:::packaging/v1.8-regolith")    full_version+="-debian-testing" ;;
     "sway-regolith:::packaging/v1.9-regolith")    ;;
     "whitesur-gtk-theme:::debian")                ;;
 
     # This package is exceptional. It is not built from a regolith repo and cannot push tags.
     #
     # Deprecated.
-    "xcb-util:::applied/ubuntu/groovy")           release_version="" ;;
+    "xcb-util:::applied/ubuntu/groovy")           full_version="" ;;
 
     # unknown package name and ref combo
     *) unsupported_combo="true" ;;
@@ -71,7 +71,7 @@ generate_tag_name() {
     return 1
   fi
 
-  RELEASE_VERSION="$release_version"
+  RELEASE_VERSION="$full_version"
 }
 
 process_model() {
