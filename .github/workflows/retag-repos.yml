@@ -2,6 +2,12 @@ name: Re-tag All the Repos
 
 on:
   workflow_dispatch:
+    inputs:
+      only-repo:
+        description: "Only process this repo"
+        type: string
+        required: false
+        default: ""
 
 jobs:
   generate:
@@ -13,7 +19,7 @@ jobs:
       - name: Re-tag Repos
         env:
           GITHUB_TOKEN: ${{ secrets.ORG_BROADCAST_TOKEN }}
-        run: ./.github/scripts/retag-all-repos.sh
+        run: ./.github/scripts/retag-all-repos.sh "${{ inputs.only-repo }}"
 
       - name: Upload Result
         uses: actions/upload-artifact@v4

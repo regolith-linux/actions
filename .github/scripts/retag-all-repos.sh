@@ -2,6 +2,8 @@
 
 set -e
 
+ONLY_REPO=$1
+
 WORKSPACE_PATH="/tmp/regolith-workspace/"
 VOULAGE_PATH="$(realpath "$WORKSPACE_PATH")/voulage/"
 PACKAGES_PATH="$(realpath "$WORKSPACE_PATH")/packages/"
@@ -60,6 +62,11 @@ process_model() {
 
   while IFS='' read -r package; do
     package_name="$package"
+
+    # only process the provided repo, if any
+    if [ -n "$ONLY_REPO" ] && [ "$ONLY_REPO" != "$package_name" ]; then
+      continue
+    fi
 
     # Exclude regolith-ftue because it's being rejected at pushing v2.1.3
     if [ "$package_name" == "regolith-ftue" ]; then
