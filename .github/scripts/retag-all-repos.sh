@@ -68,11 +68,6 @@ process_model() {
       continue
     fi
 
-    # Exclude regolith-ftue because it's being rejected at pushing v2.1.3
-    if [ "$package_name" == "regolith-ftue" ]; then
-      continue
-    fi
-
     pacakge_repo=$(jq -r ".packages.\"$package\".source" "$model_file")
     package_ref=$(jq -r ".packages.\"$package\".ref" "$model_file")
 
@@ -123,7 +118,11 @@ create_tag_from_history() {
     git tag "${release_version}"
 
     echo "Pushing '${release_version}' to upstream repo"
-    git push origin "${release_version}"
+    if ! git push origin "${release_version}"; then
+      continue
+    fi
+
+    echo "----------"
   done
   echo "" >> "$BUILD_OUTPUT"
 
