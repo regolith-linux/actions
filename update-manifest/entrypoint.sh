@@ -14,12 +14,11 @@ fi
 while read -r item; do
   distro=$(echo "$item" | jq -r .distro)
   codename=$(echo "$item" | jq -r .codename)
-  arch=$(echo "$item" | jq -r .arch)
 
-  echo "Updating ${SUITE} manifest for ${NAME} for ${distro}/${codename} (${arch})"
+  echo "Updating ${SUITE} manifest for ${NAME} for ${distro}/${codename}"
 
   # Copy existing manifest into /build/manifests/
-  MANIFEST_FOLDER="${distro}/${codename}/${SUITE}-${COMPONENT}/${arch}"
+  MANIFEST_FOLDER="${distro}/${codename}/${SUITE}-${COMPONENT}"
 
   if [ -f "${VOULAGE_PATH}/manifests/${MANIFEST_FOLDER}/manifest.txt" ]; then
     cp "${VOULAGE_PATH}/manifests/${MANIFEST_FOLDER}/manifest.txt" /build/manifests/
