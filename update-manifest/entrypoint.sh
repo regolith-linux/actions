@@ -27,7 +27,7 @@ while read -r item; do
   # Update manifest file with the change
   touch /build/manifests/manifest.txt
 
-  if grep "^${NAME} " /build/manifests/manifest.txt >/dev/null; then
+  if ! grep "^${NAME} " /build/manifests/manifest.txt >/dev/null; then
     echo "${NAME} ${REPO} ${REF} ${SHA}" >> /build/manifests/manifest.txt
   fi
   sed -i -E "s|^${NAME}[[:space:]](.*)$|${NAME} ${REPO} ${REF} ${SHA}|g" /build/manifests/manifest.txt
