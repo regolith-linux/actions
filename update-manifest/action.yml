@@ -56,6 +56,6 @@ runs:
         branch: "main"
         file_pattern: "*"
         commit_message: "chore: update ${{ inputs.suite }} manifest for ${{ inputs.name }}"
-        commit_user_name: regolith-bot
+        commit_user_name: regolith-ci-bot
         commit_user_email: bot@regolith-desktop.com
-        commit_author: "regolith-bot <bot@regolith-desktop.com>"
+        commit_author: "regolith-ci-bot <bot@regolith-desktop.com>"

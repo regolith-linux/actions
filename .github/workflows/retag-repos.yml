@@ -18,7 +18,7 @@ jobs:
 
       - name: Re-tag Repos
         env:
-          GITHUB_TOKEN: ${{ secrets.ORG_BROADCAST_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ORG_BROADCAST_TOKEN2 }}
         run: ./.github/scripts/retag-all-repos.sh "${{ inputs.only-repo }}"
 
       - name: Upload Result
