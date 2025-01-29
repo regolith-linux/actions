@@ -22,4 +22,5 @@ runs:
       shell: bash
       env:
         VOULAGE_REF: "${{ inputs.ref }}"
+        VOULAGE_REF_OVERRIDE: "${{ env.VOULAGE_REF }}"
       run: $GITHUB_ACTION_PATH/entrypoint.sh
