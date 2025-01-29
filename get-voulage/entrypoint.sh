@@ -9,6 +9,10 @@ if [ -n "$GITHUB_TOKEN" ]; then
   git config --global "url.https://git:${GITHUB_TOKEN}@github.com/.insteadOf" https://github.com/
 fi
 
+if [ -n "$VOULAGE_REF_OVERRIDE" ]; then
+  VOULAGE_REF="$VOULAGE_REF_OVERRIDE"
+fi
+
 if [ -z "$VOULAGE_REF" ]; then
   echo "Error: ref is missing"
   exit 1
