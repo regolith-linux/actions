@@ -161,6 +161,15 @@ update_model() {
 }
 
 main() {
+  # if changelog defines 'UNRELEASED' do not proceed further
+  distro_name=$(dpkg-parsechangelog --show-field Distribution)
+  if [ "$distro_name" == "UNRELEASED" ]; then
+    RELEASE_EXISTS=true
+    echo "Changelog is set to 'UNRELEASED'! Do not proceed any further!"
+
+    return
+  fi
+
   if ! generate_tag_name; then
     exit 1
   fi
