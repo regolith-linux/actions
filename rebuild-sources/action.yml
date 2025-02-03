@@ -54,7 +54,7 @@ runs:
         WORKSPACE_BASE_PATH="${{ inputs.pull-from-base }}"
         WORKSPACE_FOLDER="${{ inputs.workspace-subfolder }}"
 
-        WORKSPACE_FOLDER_PATH="${WORKSPACE_FOLDER%/}/run-${{ github.run_number }}/"
+        WORKSPACE_FOLDER_PATH="${WORKSPACE_FOLDER%/}/run-${{ github.run_id }}/"
 
         ssh ${{ env.server-username }}@${{ env.server-address }} "get-published-sources.sh --workspace-path \"${WORKSPACE_BASE_PATH}\" --workspace-folder \"${WORKSPACE_FOLDER_PATH}\""
 
@@ -63,7 +63,7 @@ runs:
       run: |
         PULL_FROM_BASE="${{ inputs.pull-from-base }}"
         PULL_FROM_FOLDER="${{ inputs.workspace-subfolder }}"
-        PULL_FULL_PATH="${PULL_FROM_BASE%/}/${PULL_FROM_FOLDER%/}/run-${{ github.run_number }}/"
+        PULL_FULL_PATH="${PULL_FROM_BASE%/}/${PULL_FROM_FOLDER%/}/run-${{ github.run_id }}/"
 
         rsync \
           -avzh \
@@ -108,6 +108,6 @@ runs:
         WORKSPACE_BASE_PATH="${{ inputs.pull-from-base }}"
         WORKSPACE_FOLDER="${{ inputs.workspace-subfolder }}"
 
-        WORKSPACE_FOLDER_PATH="${WORKSPACE_FOLDER%/}/run-${{ github.run_number }}/"
+        WORKSPACE_FOLDER_PATH="${WORKSPACE_FOLDER%/}/run-${{ github.run_id }}/"
 
         ssh ${{ env.server-username }}@${{ env.server-address }} "cleanup-workspace.sh --workspace-path \"${WORKSPACE_BASE_PATH}\" --workspace-folder \"${WORKSPACE_FOLDER_PATH}\""

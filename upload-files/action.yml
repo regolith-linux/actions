@@ -38,7 +38,7 @@ runs:
         UPLOAD_FULL_PATH="${UPLOAD_TO_BASE%/}/${UPLOAD_TO_FOLDER%/}/"
 
         if [ "${{ inputs.use-run-number }}" == "true" ]; then
-          UPLOAD_FULL_PATH+="run-${{ github.run_number }}/"
+          UPLOAD_FULL_PATH+="run-${{ github.run_id }}/"
         fi
 
         rsync \

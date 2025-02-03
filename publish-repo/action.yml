@@ -37,7 +37,7 @@ runs:
           PACKAGES_PATH+="${PACKAGES_PATH_FOLDER%/}/"
         fi
 
-        PACKAGES_PATH+="run-${{ github.run_number }}/"
+        PACKAGES_PATH+="run-${{ github.run_id }}/"
 
         ssh ${{ env.server-username }}@${{ env.server-address }} "publish-repos.sh \"${PACKAGES_PATH}\" \"${{ inputs.only-distro }}\" \"${{ inputs.only-codename }}\" \"${{ inputs.only-component }}\""
 
@@ -53,6 +53,6 @@ runs:
           PACKAGES_PATH+="${PACKAGES_PATH_FOLDER%/}/"
         fi
 
-        PACKAGES_PATH+="run-${{ github.run_number }}/"
+        PACKAGES_PATH+="run-${{ github.run_id }}/"
 
         ssh ${{ env.server-username }}@${{ env.server-address }} "find \"${PACKAGES_PATH}\""
