@@ -50,13 +50,20 @@ runs:
 
     - name: Prepare Source Files
       shell: bash
-      run: ssh ${{ env.server-username }}@${{ env.server-address }} "get-published-sources.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""
+      run: |
+        WORKSPACE_BASE_PATH="${{ inputs.pull-from-base }}"
+        WORKSPACE_FOLDER="${{ inputs.workspace-subfolder }}"
+
+        WORKSPACE_FOLDER_PATH="${WORKSPACE_FOLDER%/}/run-${{ github.run_number }}/"
+
+        ssh ${{ env.server-username }}@${{ env.server-address }} "get-published-sources.sh --workspace-path \"${WORKSPACE_BASE_PATH}\" --workspace-folder \"${WORKSPACE_FOLDER_PATH}\""
 
     - name: Pull Source Files
       shell: bash
       run: |
         PULL_FROM_BASE="${{ inputs.pull-from-base }}"
         PULL_FROM_FOLDER="${{ inputs.workspace-subfolder }}"
+        PULL_FULL_PATH="${PULL_FROM_BASE%/}/${PULL_FROM_FOLDER%/}/run-${{ github.run_number }}/"
 
         rsync \
           -avzh \
@@ -66,7 +73,7 @@ runs:
           --include="*.debian.tar.xz" \
           --include="*.diff.gz" \
           --exclude="*" \
-          ${{ env.server-username }}@${{ env.server-address }}:${PULL_FROM_BASE%/}/${PULL_FROM_FOLDER%/}/ \
+          ${{ env.server-username }}@${{ env.server-address }}:${PULL_FULL_PATH} \
           /build/workspace/
 
     - name: Rebuild Sources
@@ -97,4 +104,10 @@ runs:
 
     - name: Cleanup Workspace
       shell: bash
-      run: ssh ${{ env.server-username }}@${{ env.server-address }} "cleanup-workspace.sh --workspace-path \"${{ inputs.pull-from-base }}\" --workspace-folder \"${{ inputs.workspace-subfolder }}\""
+      run: |
+        WORKSPACE_BASE_PATH="${{ inputs.pull-from-base }}"
+        WORKSPACE_FOLDER="${{ inputs.workspace-subfolder }}"
+
+        WORKSPACE_FOLDER_PATH="${WORKSPACE_FOLDER%/}/run-${{ github.run_number }}/"
+
+        ssh ${{ env.server-username }}@${{ env.server-address }} "cleanup-workspace.sh --workspace-path \"${WORKSPACE_BASE_PATH}\" --workspace-folder \"${WORKSPACE_FOLDER_PATH}\""

@@ -31,13 +31,15 @@ runs:
         PACKAGES_PATH_BASE="${{ inputs.packages-path-base }}"
         PACKAGES_PATH_FOLDER="${{ inputs.packages-path-subfolder }}"
 
-        PACKAGES_PATH="${PACKAGES_PATH_BASE%/}"
+        PACKAGES_PATH="${PACKAGES_PATH_BASE%/}/"
 
         if [ -n "$PACKAGES_PATH_FOLDER" ]; then
-          PACKAGES_PATH+="/${PACKAGES_PATH_FOLDER%/}"
+          PACKAGES_PATH+="${PACKAGES_PATH_FOLDER%/}/"
         fi
 
-        ssh ${{ env.server-username }}@${{ env.server-address }} "publish-repos.sh \"${PACKAGES_PATH}/\" \"${{ inputs.only-distro }}\" \"${{ inputs.only-codename }}\" \"${{ inputs.only-component }}\""
+        PACKAGES_PATH+="run-${{ github.run_number }}/"
+
+        ssh ${{ env.server-username }}@${{ env.server-address }} "publish-repos.sh \"${PACKAGES_PATH}\" \"${{ inputs.only-distro }}\" \"${{ inputs.only-codename }}\" \"${{ inputs.only-component }}\""
 
     - name: Failed Publish Package(s)
       shell: bash
@@ -45,10 +47,12 @@ runs:
         PACKAGES_PATH_BASE="${{ inputs.packages-path-base }}"
         PACKAGES_PATH_FOLDER="${{ inputs.packages-path-subfolder }}"
 
-        PACKAGES_PATH="${PACKAGES_PATH_BASE%/}"
+        PACKAGES_PATH="${PACKAGES_PATH_BASE%/}/"
 
         if [ -n "$PACKAGES_PATH_FOLDER" ]; then
-          PACKAGES_PATH+="/${PACKAGES_PATH_FOLDER%/}"
+          PACKAGES_PATH+="${PACKAGES_PATH_FOLDER%/}/"
         fi
 
-        ssh ${{ env.server-username }}@${{ env.server-address }} "find \"${PACKAGES_PATH}/\""
+        PACKAGES_PATH+="run-${{ github.run_number }}/"
+
+        ssh ${{ env.server-username }}@${{ env.server-address }} "find \"${PACKAGES_PATH}\""

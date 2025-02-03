@@ -40,6 +40,11 @@ format of `<upload-to-base>/<upload-to-folder>`.
     #
     # Required.
     upload-to-folder: "..."
+
+    # use-run-number is to create and use a subfolder named 'run-XXX' inside 'upload-to-folder'
+    #
+    # Required.
+    use-run-number: "true"
 ```
 
 ## Scenarios
