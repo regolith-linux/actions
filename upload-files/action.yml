@@ -20,6 +20,10 @@ inputs:
   upload-to-folder:
     description: "Name of the folder to upload into in 'upload-to-base'"
     required: true
+  use-run-number:
+    description: "Create and use a subfolder named 'run-XXX' inside 'upload-to-folder'"
+    required: true
+    default: "true"
 
 runs:
   using: composite
@@ -31,9 +35,15 @@ runs:
         UPLOAD_TO_BASE="${{ inputs.upload-to-base }}"
         UPLOAD_TO_FOLDER="${{ inputs.upload-to-folder }}"
 
+        UPLOAD_FULL_PATH="${UPLOAD_TO_BASE%/}/${UPLOAD_TO_FOLDER%/}/"
+
+        if [ "${{ inputs.use-run-number }}" == "true" ]; then
+          UPLOAD_FULL_PATH+="run-${{ github.run_number }}/"
+        fi
+
         rsync \
           -avzhH \
           --ignore-missing-args \
           --mkpath \
           ${UPLOAD_FROM%/}/${{ inputs.upload-pattern }} \
-          ${{ env.server-username }}@${{ env.server-address }}:${UPLOAD_TO_BASE%/}/${UPLOAD_TO_FOLDER%/}/
+          ${{ env.server-username }}@${{ env.server-address }}:${UPLOAD_FULL_PATH}
