@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -eo pipefail
 
 if [ -z "$VOULAGE_PATH" ]; then
   echo "Error: VOULAGE_PATH is empty"

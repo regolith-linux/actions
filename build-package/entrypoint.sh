@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -eo pipefail
 
 if [ -z "$VOULAGE_PATH" ]; then
   echo "Error: VOULAGE_PATH is empty"
@@ -43,10 +43,16 @@ RAW_BUILD_LOG="${WORKING_DIR}/buildlog/BUILD_LOG_${TARGET_ID}.raw.txt"
 
 # generate changelog and sourcelog
 echo "::group::Generating buildlogs"
-grep ^CHLOG: "${RAW_BUILD_LOG}" | cut -c 7- > "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
+touch "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
+if grep "^CHLOG:" "${RAW_BUILD_LOG}" >/dev/null; then
+  grep "^CHLOG:" "${RAW_BUILD_LOG}" | cut -c 7- > "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
+fi
 echo -e "\033[0;34mGenerated ${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt successfully.\033[0m"
 
-grep ^SRCLOG: "${RAW_BUILD_LOG}" | cut -c 8- > "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+touch "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+if grep "^SRCLOG:" "${RAW_BUILD_LOG}" >/dev/null; then
+  grep "^SRCLOG:" "${RAW_BUILD_LOG}" | cut -c 8- > "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+fi
 echo -e "\033[0;34mGenerated ${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt successfully.\033[0m"
 echo "::endgroup::"
 
