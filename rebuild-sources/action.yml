@@ -71,6 +71,7 @@ runs:
           --include="*/" \
           --include="*.orig.tar.gz" \
           --include="*.debian.tar.xz" \
+          --include="*.tar.xz" \
           --include="*.diff.gz" \
           --exclude="*" \
           ${{ env.server-username }}@${{ env.server-address }}:${PULL_FULL_PATH} \
