@@ -18,7 +18,7 @@ fi
 export DEBEMAIL="${GPG_EMAIL}"
 export DEBFULLNAME="${GPG_NAME}"
 
-echo "Building ${PACKAGE_NAME} for ${DISTRO}/${CODENAME} (stage=${STAGE} arch=${ARCH} component=${COMPONENT})..."
+echo -e "\033[0;34mBuilding ${PACKAGE_NAME} for ${DISTRO}/${CODENAME} (stage=${STAGE} arch=${ARCH} component=${COMPONENT})...\033[0m"
 
 # working directories
 WORKSPACE_PATH=$(realpath "$(realpath "$WORKSPACE_PATH")/../")
@@ -42,18 +42,30 @@ RAW_BUILD_LOG="${WORKING_DIR}/buildlog/BUILD_LOG_${TARGET_ID}.raw.txt"
   | tee -a "${RAW_BUILD_LOG}"
 
 # generate changelog and sourcelog
+echo "::group::Generating buildlogs"
 grep ^CHLOG: "${RAW_BUILD_LOG}" | cut -c 7- > "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
+echo -e "\033[0;34mGenerated ${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt successfully.\033[0m"
+
 grep ^SRCLOG: "${RAW_BUILD_LOG}" | cut -c 8- > "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+echo -e "\033[0;34mGenerated ${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt successfully.\033[0m"
+echo "::endgroup::"
 
 # list the generated files for debugging purposes
+echo "::group::Listing content of publish folder"
 find "${WORKING_DIR}/publish"
+echo "::endgroup::"
 
 # cleanup build log
 rm "${RAW_BUILD_LOG}"
 
 # print changelog and sourcelog for debugging purposes
+echo "::group::Printing changelog"
 cat "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
+echo "::endgroup::"
+
+echo "::group::Printing sourcelog"
 cat "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+echo "::endgroup::"
 
 # shellcheck disable=SC2086
 echo "publish-path=${WORKING_DIR}/publish/" >> $GITHUB_OUTPUT
