@@ -52,6 +52,25 @@ echo -e "\033[0;34mGenerated ${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt 
 touch "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
 if grep "^SRCLOG:" "${RAW_BUILD_LOG}" >/dev/null; then
   grep "^SRCLOG:" "${RAW_BUILD_LOG}" | cut -c 8- > "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+else
+  # sourcelog is empty, this means the version is brand new and
+  # we're going to force create one to unify the .orig.tar.gz file
+  # between parallel running jobs
+
+  pushd "$PKG_BUILD_PATH/$PACKAGE_NAME" >/dev/null
+
+  debian_package_name=$(dpkg-parsechangelog --show-field Source)
+  full_version=$(dpkg-parsechangelog --show-field Version)
+  debian_version="${full_version%-*}"
+
+  debian_package_name_indicator="${debian_package_name:0:1}"
+  if [ "${debian_package_name:0:3}" == "lib" ]; then
+    debian_package_name_indicator="${debian_package_name:0:4}"
+  fi
+
+  popd >/dev/null
+
+  echo "$DISTRO=$CODENAME=$SUITE=${debian_package_name_indicator}=${debian_package_name}=${debian_package_name}_${debian_version}=${debian_package_name}_${debian_version}.orig.tar.gz" > "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
 fi
 echo -e "\033[0;34mGenerated ${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt successfully.\033[0m"
 echo "::endgroup::"
