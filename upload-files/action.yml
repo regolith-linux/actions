@@ -41,9 +41,11 @@ runs:
           UPLOAD_FULL_PATH+="run-${{ github.run_id }}/"
         fi
 
+        echo "::group::Uploading files..."
         rsync \
           -avzhH \
           --ignore-missing-args \
           --mkpath \
           ${UPLOAD_FROM%/}/${{ inputs.upload-pattern }} \
           ${{ env.server-username }}@${{ env.server-address }}:${UPLOAD_FULL_PATH}
+        echo "::endgroup::"
