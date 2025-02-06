@@ -65,6 +65,7 @@ runs:
         PULL_FROM_FOLDER="${{ inputs.workspace-subfolder }}"
         PULL_FULL_PATH="${PULL_FROM_BASE%/}/${PULL_FROM_FOLDER%/}/run-${{ github.run_id }}/"
 
+        echo "::group::Downloading source files..."
         rsync \
           -avzh \
           --exclude="*.*/" \
@@ -76,6 +77,7 @@ runs:
           --exclude="*" \
           ${{ env.server-username }}@${{ env.server-address }}:${PULL_FULL_PATH} \
           /build/workspace/
+        echo "::endgroup::"
 
     - name: Rebuild Sources
       shell: bash
