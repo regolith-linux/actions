@@ -9,7 +9,7 @@ TARGET_PACKAGE=$3
 apt update
 
 # Install repo key
-wget -qO - "$APT_KEY_URL" | gpg --dearmor | sudo tee /etc/apt/keyrings/regolith.gpg
+wget -qO - "$APT_KEY_URL" | gpg --dearmor | sudo tee /etc/apt/keyrings/regolith.gpg >/dev/null
 
 # Update apt configuration with new repository
 echo "$APT_REPO_LINE" | tee /etc/apt/sources.list.d/regolith.list
