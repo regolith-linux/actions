@@ -29,7 +29,7 @@ jobs:
         stage: [experimental, unstable, testing, release-current] # release-3_0, release-3_1, release-3_2
     env:
       apt-key-url: http://archive.regolith-desktop.com/regolith.key
-      apt-repo-line: "deb [arch=amd64] http://archive.regolith-desktop.com/${{"{{"}} matrix.stage {{"}}"}}-{{ $name }}-{{ . }}-amd64 {{ . }} main"
+      apt-repo-line: "deb [arch=amd64 signed-by=/etc/apt/keyrings/regolith.gpg] http://archive.regolith-desktop.com/${{"{{"}} matrix.stage {{"}}"}}-{{ $name }}-{{ . }}-amd64 {{ . }} main"
       target-package: regolith-desktop
     steps:
       - name: Checkout
