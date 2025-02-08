@@ -53,10 +53,9 @@ runs:
       run: |
         WORKSPACE_BASE_PATH="${{ inputs.pull-from-base }}"
         WORKSPACE_FOLDER="${{ inputs.workspace-subfolder }}"
+        WORKSPACE_RUN_ID="run-${{ github.run_id }}/"
 
-        WORKSPACE_FOLDER_PATH="${WORKSPACE_FOLDER%/}/run-${{ github.run_id }}/"
-
-        ssh ${{ env.server-username }}@${{ env.server-address }} "get-published-sources.sh --workspace-path \"${WORKSPACE_BASE_PATH}\" --workspace-folder \"${WORKSPACE_FOLDER_PATH}\""
+        ssh ${{ env.server-username }}@${{ env.server-address }} "get-published-sources.sh --workspace-path \"${WORKSPACE_BASE_PATH}\" --workspace-folder \"${WORKSPACE_FOLDER}\" --workspace-run-id \"${WORKSPACE_RUN_ID}\""
 
     - name: Pull Source Files
       shell: bash
@@ -110,7 +109,6 @@ runs:
       run: |
         WORKSPACE_BASE_PATH="${{ inputs.pull-from-base }}"
         WORKSPACE_FOLDER="${{ inputs.workspace-subfolder }}"
+        WORKSPACE_RUN_ID="run-${{ github.run_id }}/"
 
-        WORKSPACE_FOLDER_PATH="${WORKSPACE_FOLDER%/}/run-${{ github.run_id }}/"
-
-        ssh ${{ env.server-username }}@${{ env.server-address }} "cleanup-workspace.sh --workspace-path \"${WORKSPACE_BASE_PATH}\" --workspace-folder \"${WORKSPACE_FOLDER_PATH}\""
+        ssh ${{ env.server-username }}@${{ env.server-address }} "cleanup-workspace.sh --workspace-path \"${WORKSPACE_BASE_PATH}\" --workspace-folder \"${WORKSPACE_FOLDER_PATH}\" --workspace-run-id \"${WORKSPACE_RUN_ID}\""
