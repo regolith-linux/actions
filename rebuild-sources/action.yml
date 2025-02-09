@@ -111,4 +111,4 @@ runs:
         WORKSPACE_FOLDER="${{ inputs.workspace-subfolder }}"
         WORKSPACE_RUN_ID="run-${{ github.run_id }}/"
 
-        ssh ${{ env.server-username }}@${{ env.server-address }} "cleanup-workspace.sh --workspace-path \"${WORKSPACE_BASE_PATH}\" --workspace-folder \"${WORKSPACE_FOLDER_PATH}\" --workspace-run-id \"${WORKSPACE_RUN_ID}\""
+        ssh ${{ env.server-username }}@${{ env.server-address }} "cleanup-workspace.sh --workspace-path \"${WORKSPACE_BASE_PATH}\" --workspace-folder \"${WORKSPACE_FOLDER}\" --workspace-run-id \"${WORKSPACE_RUN_ID}\""
