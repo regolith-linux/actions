@@ -38,7 +38,7 @@ fi
 
 includes=()
 error_msg=""
-STAGE_MODEL_PACKAGE_REF=""
+STAGE_MODEL_PACKAGE_REF="n/a"
 
 process_model() {
   process_level="$1"
@@ -95,6 +95,7 @@ process_model() {
     if [ "$process_level" == "stage" ]; then
       # Don't 'return 1' here!
       echo "  - package not found in stage model (it might exist in distro level)"
+      echo ""
     else
       # Distro doesn't explicitly override the root model. We just need
       # to make sure the root model's ref is the same as requested ref.
