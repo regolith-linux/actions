@@ -57,7 +57,7 @@ else
   # we're going to force create one to unify the .orig.tar.gz file
   # between parallel running jobs
 
-  pushd "$PKG_BUILD_PATH/$PACKAGE_NAME" >/dev/null
+  pushd "$WORKSPACE_PATH/$PACKAGE_NAME" >/dev/null
 
   debian_package_name=$(dpkg-parsechangelog --show-field Source)
   full_version=$(dpkg-parsechangelog --show-field Version)
