@@ -10,6 +10,11 @@ name, package repo, and package ref to checkout the code.
 ```yaml
 - uses: regolith-linux/actions/build-package@main
   with:
+    # only-build the package, if set to false don't sign nor publish the package.
+    #
+    # Required.
+    only-build: "false"
+
     # name of the package to build.
     #
     # Required.

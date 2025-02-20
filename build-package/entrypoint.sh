@@ -29,6 +29,7 @@ TARGET_ID="${DISTRO}-${CODENAME}-${STAGE}-${ARCH}"
 RAW_BUILD_LOG="${WORKING_DIR}/buildlog/BUILD_LOG_${TARGET_ID}.raw.txt"
 
 "${VOULAGE_PATH}/.github/scripts/ci-build.sh" \
+  --build-only "${BUILD_ONLY}" \
   --package-name "${PACKAGE_NAME}" \
   --extension "ext-debian.sh" \
   --pkg-build-path "${WORKSPACE_PATH}" \
@@ -42,55 +43,61 @@ RAW_BUILD_LOG="${WORKING_DIR}/buildlog/BUILD_LOG_${TARGET_ID}.raw.txt"
   | tee -a "${RAW_BUILD_LOG}"
 
 # generate changelog and sourcelog
-echo "::group::Generating buildlogs"
-touch "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
-if grep "^CHLOG:" "${RAW_BUILD_LOG}" >/dev/null; then
-  grep "^CHLOG:" "${RAW_BUILD_LOG}" | cut -c 7- > "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
-fi
-echo -e "\033[0;34mGenerated ${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt successfully.\033[0m"
-
-touch "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
-if grep "^SRCLOG:" "${RAW_BUILD_LOG}" >/dev/null; then
-  grep "^SRCLOG:" "${RAW_BUILD_LOG}" | cut -c 8- > "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
-else
-  # sourcelog is empty, this means the version is brand new and
-  # we're going to force create one to unify the .orig.tar.gz file
-  # between parallel running jobs
-
-  pushd "$WORKSPACE_PATH/$PACKAGE_NAME" >/dev/null
-
-  debian_package_name=$(dpkg-parsechangelog --show-field Source)
-  full_version=$(dpkg-parsechangelog --show-field Version)
-  debian_version="${full_version%-*}"
-
-  debian_package_name_indicator="${debian_package_name:0:1}"
-  if [ "${debian_package_name:0:3}" == "lib" ]; then
-    debian_package_name_indicator="${debian_package_name:0:4}"
+if [ "$BUILD_ONLY" == "false" ]; then
+  echo "::group::Generating buildlogs"
+  touch "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
+  if grep "^CHLOG:" "${RAW_BUILD_LOG}" >/dev/null; then
+    grep "^CHLOG:" "${RAW_BUILD_LOG}" | cut -c 7- > "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
   fi
+  echo -e "\033[0;34mGenerated ${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt successfully.\033[0m"
 
-  popd >/dev/null
+  touch "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+  if grep "^SRCLOG:" "${RAW_BUILD_LOG}" >/dev/null; then
+    grep "^SRCLOG:" "${RAW_BUILD_LOG}" | cut -c 8- > "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+  else
+    # sourcelog is empty, this means the version is brand new and
+    # we're going to force create one to unify the .orig.tar.gz file
+    # between parallel running jobs
 
-  echo "$DISTRO=$CODENAME=$SUITE=${debian_package_name_indicator}=${debian_package_name}=${debian_package_name}_${debian_version}=${debian_package_name}_${debian_version}.orig.tar.gz" > "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+    pushd "$WORKSPACE_PATH/$PACKAGE_NAME" >/dev/null
+
+    debian_package_name=$(dpkg-parsechangelog --show-field Source)
+    full_version=$(dpkg-parsechangelog --show-field Version)
+    debian_version="${full_version%-*}"
+
+    debian_package_name_indicator="${debian_package_name:0:1}"
+    if [ "${debian_package_name:0:3}" == "lib" ]; then
+      debian_package_name_indicator="${debian_package_name:0:4}"
+    fi
+
+    popd >/dev/null
+
+    echo "$DISTRO=$CODENAME=$SUITE=${debian_package_name_indicator}=${debian_package_name}=${debian_package_name}_${debian_version}=${debian_package_name}_${debian_version}.orig.tar.gz" > "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+  fi
+  echo -e "\033[0;34mGenerated ${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt successfully.\033[0m"
+  echo "::endgroup::"
 fi
-echo -e "\033[0;34mGenerated ${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt successfully.\033[0m"
-echo "::endgroup::"
 
 # list the generated files for debugging purposes
-echo "::group::Listing content of publish folder"
-find "${WORKING_DIR}/publish"
-echo "::endgroup::"
+if [ "$BUILD_ONLY" == "false" ]; then
+  echo "::group::Listing content of publish folder"
+  find "${WORKING_DIR}/publish"
+  echo "::endgroup::"
+fi
 
 # cleanup build log
 rm "${RAW_BUILD_LOG}"
 
 # print changelog and sourcelog for debugging purposes
-echo "::group::Printing changelog"
-cat "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
-echo "::endgroup::"
+if [ "$BUILD_ONLY" == "false" ]; then
+  echo "::group::Printing changelog"
+  cat "${WORKING_DIR}/buildlog/CHANGELOG_${TARGET_ID}.txt"
+  echo "::endgroup::"
 
-echo "::group::Printing sourcelog"
-cat "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
-echo "::endgroup::"
+  echo "::group::Printing sourcelog"
+  cat "${WORKING_DIR}/buildlog/SOURCELOG_${TARGET_ID}.txt"
+  echo "::endgroup::"
+fi
 
 # shellcheck disable=SC2086
 echo "publish-path=${WORKING_DIR}/publish/" >> $GITHUB_OUTPUT

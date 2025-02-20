@@ -4,6 +4,10 @@ description: |
   name, package repo, and package ref to checkout the code.
 
 inputs:
+  only-build:
+    description: "Only build indicator, if set to false don't sign nor publish the package"
+    required: true
+    default: "false"
   name:
     description: "Name of the package to build"
     required: true
@@ -55,6 +59,8 @@ runs:
       env:
         WORKSPACE_PATH: "${{ github.workspace }}"
         VOULAGE_PATH: "${{ steps.voulage.outputs.path }}"
+
+        BUILD_ONLY: "${{ inputs.only-build }}"
 
         PACKAGE_NAME: "${{ inputs.name }}"
         DISTRO: "${{ inputs.distro }}"
