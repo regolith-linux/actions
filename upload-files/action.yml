@@ -41,11 +41,18 @@ runs:
           UPLOAD_FULL_PATH+="run-${{ github.run_id }}/"
         fi
 
+        mkpath_flag=""
+
+        if rsync --help | grep mkpath >/dev/null; then
+          mkpath_flag="--mkpath"
+        else
+          ssh ${{ env.server-username }}@${{ env.server-address }} "mkdir -p ${UPLOAD_FULL_PATH}"
+        fi
+
         echo "::group::Uploading files..."
         rsync \
           -avzhH \
-          --ignore-missing-args \
-          --mkpath \
+          --ignore-missing-args $mkpath_flag \
           ${UPLOAD_FROM%/}/${{ inputs.upload-pattern }} \
           ${{ env.server-username }}@${{ env.server-address }}:${UPLOAD_FULL_PATH}
         echo "::endgroup::"
