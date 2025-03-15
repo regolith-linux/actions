@@ -147,8 +147,10 @@ update_model() {
 
   echo "Updating package in 'testing/${model_sub_path}'."
 
-  mkdir -p "${model_path}"
-  touch "${model_path%/}/package-model.json"
+  if [ ! -d "$model_path" ] || [ ! -f "$model_file" ]; then
+    echo "Warning: Model file 'testing/${model_sub_path}' not found."
+    return 1
+  fi
 
   jq -S '.packages.["'"${PACKAGE_NAME}"'"].ref="'"$RELEASE_VERSION"'" | .packages.["'"${PACKAGE_NAME}"'"].source="'"$PACKAGE_REPO"'" ' "$model_file" > "$model_file.tmp"
 
