@@ -55,4 +55,4 @@ runs:
 
         PACKAGES_PATH+="run-${{ github.run_id }}/"
 
-        ssh ${{ env.server-username }}@${{ env.server-address }} "find \"${PACKAGES_PATH}\""
+        ssh ${{ env.server-username }}@${{ env.server-address }} "[ -d \"${PACKAGES_PATH}\" ] && find \"${PACKAGES_PATH}\" || true"
