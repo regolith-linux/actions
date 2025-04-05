@@ -55,6 +55,7 @@ generate_tag_name() {
     "sway-regolith:::packaging/v1.7-regolith")    full_version+="-ubuntu-jammy" ;;
     "sway-regolith:::packaging/v1.8-regolith")    full_version+="-debian-testing" ;;
     "sway-regolith:::packaging/v1.9-regolith")    ;;
+    "sway-regolith:::packaging/v1.10-regolith")   ;;
     "whitesur-gtk-theme:::debian")                ;;
 
     # This package is exceptional. It is not built from a regolith repo and cannot push tags.
