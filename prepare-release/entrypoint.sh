@@ -37,6 +37,7 @@ generate_tag_name() {
     # library/platform specific branches ~ convention is <library-name>-<version>
     "regolith/1%43.0-1")                          full_version+="-gnome-43" ;;
     "regolith/46")                                full_version+="-gnome-46" ;;
+    "regolith/48")                                full_version+="-gnome-48" ;;
 
     # unknown package ref
     *) unsupported_ref="true" ;;
