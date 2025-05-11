@@ -32,6 +32,9 @@ while read -r item; do
   fi
   sed -i -E "s|^${NAME}[[:space:]](.*)$|${NAME} ${REPO} ${REF} ${SHA}|g" /build/manifests/manifest.txt
 
+  # always sort the file
+  sort -o /build/manifests/manifest.txt /build/manifests/manifest.txt
+
   # Copy back manifest from /build/manifests/ to Voulage cloned folder
   mkdir -p "${VOULAGE_PATH}/manifests/${MANIFEST_FOLDER}/"
   cp /build/manifests/manifest.txt "${VOULAGE_PATH}/manifests/${MANIFEST_FOLDER}/"
