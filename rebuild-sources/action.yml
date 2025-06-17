@@ -67,7 +67,6 @@ runs:
         echo "::group::Downloading source files..."
         rsync \
           -avzh \
-          --exclude="*.*/" \
           --include="*/" \
           --include="*.orig.tar.gz" \
           --include="*.debian.tar.xz" \
