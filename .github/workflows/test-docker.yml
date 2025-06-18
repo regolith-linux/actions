@@ -53,6 +53,8 @@ jobs:
             codename: oracular
           - distro: ubuntu
             codename: plucky
+          - distro: ubuntu
+            codename: questing
 
     steps:
       - name: Set up QEMU
