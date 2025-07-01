@@ -31,7 +31,7 @@ jobs:
         run: go run test-desktop/main.go
 
       - name: Push Changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         env:
           GITHUB_TOKEN: ${{ secrets.ORG_BROADCAST_TOKEN2 }}
         with:
