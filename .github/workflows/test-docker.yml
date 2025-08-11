@@ -37,6 +37,8 @@ jobs:
           - distro: debian
             codename: bullseye
           - distro: debian
+            codename: trixie
+          - distro: debian
             codename: testing
 
           - distro: ubuntu
