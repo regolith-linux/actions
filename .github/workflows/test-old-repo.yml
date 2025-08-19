@@ -83,6 +83,28 @@ jobs:
           apt-repo-line: ${{ env.apt-repo-line }}
           target-package: ${{ env.target-package }}
 
+  debian-trixie:
+    runs-on: ubuntu-24.04
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    strategy:
+      fail-fast: false
+      matrix:
+        stage: [experimental, unstable, testing, release-current] # release-3_0, release-3_1, release-3_2
+    env:
+      apt-key-url: http://regolith-desktop.org/regolith.key
+      apt-repo-line: "deb [arch=amd64] https://regolith-desktop.org/${{ matrix.stage }}-debian-trixie-amd64 trixie main"
+      target-package: regolith-desktop
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install ${{ env.target-package }} ${{ matrix.stage }} on debian trixie
+        uses: ./test-desktop/debian/trixie
+        with:
+          apt-key-url: ${{ env.apt-key-url }}
+          apt-repo-line: ${{ env.apt-repo-line }}
+          target-package: ${{ env.target-package }}
+
   ubuntu-focal:
     runs-on: ubuntu-24.04
     if: "!contains(github.event.head_commit.message, '[ci skip]')"
