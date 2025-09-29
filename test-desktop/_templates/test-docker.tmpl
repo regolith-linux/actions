@@ -39,6 +39,10 @@ jobs:
             codename: {{ . -}}
             {{- end }}
 {{ end }}
+        arch:
+          - amd64
+          - arm64
+
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -46,7 +50,8 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build ${{"{{"}} matrix.os.distro {{"}}"}} ${{"{{"}} matrix.os.codename {{"}}"}}
+      - name: Build ${{"{{"}} matrix.os.distro {{"}}"}} ${{"{{"}} matrix.os.codename {{"}}"}} ${{"{{"}} matrix.arch {{"}}"}}
         uses: docker/build-push-action@v6
         with:
           context: "{{"{{"}} defaultContext {{"}}"}}:test-desktop/${{"{{"}} matrix.os.distro {{"}}"}}/${{"{{"}} matrix.os.codename {{"}}"}}"
+          platforms: "linux/${{"{{"}} matrix.arch {{"}}"}}"
