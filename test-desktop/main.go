@@ -21,14 +21,8 @@ var supportedDistros = []distribution{Debian, Ubuntu}
 //go:embed _templates/test-docker.tmpl
 var tplDockerTest []byte
 
-//go:embed _templates/test-old-repo.tmpl
-var tplOldRepoTest []byte
-
-//go:embed _templates/test-new-repo.tmpl
-var tplNewRepoTest []byte
-
-//go:embed _templates/test-migrate-repo.tmpl
-var tplMigrateRepoTest []byte
+//go:embed _templates/test-repo.tmpl
+var tplRepoTest []byte
 
 func main() {
 	distros, err := getDistros()
@@ -42,17 +36,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = renderFiles(tplOldRepoTest, "test-old-repo", distros); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err.Error())
-		os.Exit(1)
-	}
-
-	if err = renderFiles(tplNewRepoTest, "test-new-repo", distros); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err.Error())
-		os.Exit(1)
-	}
-
-	if err = renderFiles(tplMigrateRepoTest, "test-migrate-repo", distros); err != nil {
+	if err = renderFiles(tplRepoTest, "test-repo", distros); err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", err.Error())
 		os.Exit(1)
 	}
