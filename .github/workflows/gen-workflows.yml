@@ -1,4 +1,4 @@
-name: Check Workflow files
+name: Generate Workflow files
 
 on:
   workflow_dispatch:
