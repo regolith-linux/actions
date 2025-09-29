@@ -30,7 +30,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on debian bookworm
         uses: ./test-desktop/debian/bookworm
@@ -52,7 +52,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on debian bullseye
         uses: ./test-desktop/debian/bullseye
@@ -74,7 +74,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on debian testing
         uses: ./test-desktop/debian/testing
@@ -96,7 +96,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on debian trixie
         uses: ./test-desktop/debian/trixie
@@ -118,7 +118,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on ubuntu focal
         uses: ./test-desktop/ubuntu/focal
@@ -140,7 +140,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on ubuntu jammy
         uses: ./test-desktop/ubuntu/jammy
@@ -162,7 +162,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on ubuntu lunar
         uses: ./test-desktop/ubuntu/lunar
@@ -184,7 +184,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on ubuntu mantic
         uses: ./test-desktop/ubuntu/mantic
@@ -206,7 +206,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on ubuntu noble
         uses: ./test-desktop/ubuntu/noble
@@ -228,7 +228,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on ubuntu oracular
         uses: ./test-desktop/ubuntu/oracular
@@ -250,7 +250,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on ubuntu plucky
         uses: ./test-desktop/ubuntu/plucky
@@ -272,7 +272,7 @@ jobs:
       target-package: regolith-desktop
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install ${{ env.target-package }} ${{ matrix.stage }} on ubuntu questing
         uses: ./test-desktop/ubuntu/questing
