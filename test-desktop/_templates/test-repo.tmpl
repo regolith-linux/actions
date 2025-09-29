@@ -2,11 +2,11 @@
 #
 # This file is auto-generated and any manual changes will be overwritten, nightly.
 #
-# - to change this file: modify .github/templates/test-old-repo.tmpl
+# - to change this file: modify test-desktop/_templates/test-repo.tmpl
 # - to add a new distro: modify main.go and add a new entry to `supportedDistros`
 # - to add new codename: create a subfolder in corresponding distro folder
 
-name: Test Old Repository
+name: Test Archive Repository
 
 on:
   workflow_dispatch:
@@ -26,10 +26,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        stage: [experimental, unstable, testing, release-current] # release-3_0, release-3_1, release-3_2
+        stage: [experimental, unstable, testing, stable]
     env:
-      apt-key-url: http://regolith-desktop.org/regolith.key
-      apt-repo-line: "deb [arch=amd64] https://regolith-desktop.org/${{"{{"}} matrix.stage {{"}}"}}-{{ $name }}-{{ . }}-amd64 {{ . }} main"
+      apt-key-url: http://archive.regolith-desktop.com/regolith.key
+      apt-repo-line: "deb [arch=amd64 signed-by=/etc/apt/keyrings/regolith.gpg] http://archive.regolith-desktop.com/{{ $name }}/${{"{{"}} matrix.stage {{"}}"}} {{ . }} main"
       target-package: regolith-desktop
     steps:
       - name: Checkout
