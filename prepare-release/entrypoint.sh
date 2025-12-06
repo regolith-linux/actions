@@ -32,6 +32,7 @@ generate_tag_name() {
     "ubuntu-focal"|"ubuntu/focal")                full_version+="-ubuntu-focal" ;;
     "debian-bullseye")                            full_version+="-debian-bullseye" ;;
     "debian-testing"|"debian/testing")            full_version+="-debian-testing" ;;
+    "debian-trixie"|"debian/trixie")              full_version+="-debian-trixie" ;;
     "debian-bookworm"|"debian-bookworm-compat")   full_version+="-debian-bookworm" ;;
 
     # library/platform specific branches ~ convention is <library-name>-<version>
