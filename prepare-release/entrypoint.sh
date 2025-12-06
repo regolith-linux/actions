@@ -38,6 +38,7 @@ generate_tag_name() {
     "regolith/1%43.0-1")                          full_version+="-gnome-43" ;;
     "regolith/46")                                full_version+="-gnome-46" ;;
     "regolith/48")                                full_version+="-gnome-48" ;;
+    "regolith/49")                                full_version+="-gnome-49" ;;
 
     # unknown package ref
     *) unsupported_ref="true" ;;
