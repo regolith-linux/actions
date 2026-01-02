@@ -22,7 +22,7 @@ jobs:
         run: ./.github/scripts/retag-all-repos.sh "${{ inputs.only-repo }}"
 
       - name: Upload Result
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: result-log
           path: "/tmp/regolith-workspace/logs/result-*.log"
