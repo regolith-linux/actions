@@ -26,6 +26,7 @@ generate_tag_name() {
   case "$PACKAGE_REF" in
     # default main/master branches ~ convention is main
     "main"|"master")                              ;;
+    "release/*")                                  ;;
 
     # distro/codename specific branches ~ convention is <distro>-<codename>
     "ubuntu-jammy"|"ubuntu/jammy")                full_version+="-ubuntu-jammy" ;;
