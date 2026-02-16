@@ -57,6 +57,8 @@ jobs:
             codename: plucky
           - distro: ubuntu
             codename: questing
+          - distro: ubuntu
+            codename: resolute
 
         arch:
           - amd64
