@@ -59,6 +59,8 @@ jobs:
             codename: questing
           - distro: ubuntu
             codename: resolute
+          - distro: ubuntu
+            codename: stonking
 
         arch:
           - amd64
