@@ -8,7 +8,7 @@ A collection of reusable Github Actions workflows.
 | Name⠀⠀⠀⠀⠀⠀⠀⠀⠀| Description |
 |----------------|-------------|
 | `build-matrix` | Build a matrix of currently supported distros and codenames in encoded JSON list format. The list is being built out of `stage/unstable` folder of [voulage](https://github.com/regolith-linux/voulage/).  |
-| `build-package` | Build a package for speficied distro/codename/stage triplet. It uses package name, package repo, and package ref to checkout the code.  |
+| `build-package` | Build a package for speficied distro/codename/stage triplet. It uses package name, package repo, and package ref to checkout the code. If the package has autopkgtests (`debian/tests/control`), they run against the built packages.  |
 | `ensure-sudo` | Ensure `sudo` command is installed and available.  |
 | `get-voulage` | Clone and fetch [voulage](https://github.com/regolith-linux/voulage/) repository at given ref.  |
 | `import-gpg` | Import given GPG private key with its associated email and full name.  |

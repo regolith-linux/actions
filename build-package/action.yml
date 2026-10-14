@@ -1,7 +1,8 @@
 name: Build Package
 description: |
   Build a package for speficied distro/codename/stage triplet. It uses package
-  name, package repo, and package ref to checkout the code.
+  name, package repo, and package ref to checkout the code. If the package has
+  autopkgtests (`debian/tests/control`), they run against the built packages.
 
 inputs:
   only-build:
@@ -37,6 +38,10 @@ inputs:
     description: "Full Name associated with the GPG Key"
     required: true
     default: "Regolith Linux"
+  run-autopkgtest:
+    description: "Run the package autopkgtests (debian/tests/control) after the build (auto, true, false). auto runs them only if only-build is true"
+    required: false
+    default: "auto"
 
 outputs:
   publish-path:
@@ -45,6 +50,9 @@ outputs:
   buildlog-path:
     description: "The path on disk that buildlogs are saved to"
     value: ${{ steps.build.outputs.buildlog-path }}
+  autopkgtest-path:
+    description: "The path on disk that autopkgtest results are saved to, empty if the tests did not run"
+    value: ${{ steps.autopkgtest.outputs.output-path }}
 
 runs:
   using: composite
@@ -73,3 +81,27 @@ runs:
         GPG_EMAIL: "${{ inputs.gpg-email }}"
         GPG_NAME: "${{ inputs.gpg-name }}"
       run: $GITHUB_ACTION_PATH/entrypoint.sh
+
+    - name: Run autopkgtests
+      id: autopkgtest
+      shell: bash
+      env:
+        WORKSPACE_PATH: "${{ github.workspace }}"
+
+        BUILD_ONLY: "${{ inputs.only-build }}"
+        RUN_AUTOPKGTEST: "${{ inputs.run-autopkgtest }}"
+
+        PACKAGE_NAME: "${{ inputs.name }}"
+        DISTRO: "${{ inputs.distro }}"
+        CODENAME: "${{ inputs.codename }}"
+        STAGE: "${{ inputs.stage }}"
+        ARCH: "${{ inputs.arch }}"
+      run: $GITHUB_ACTION_PATH/autopkgtest.sh
+
+    - name: Upload autopkgtest results
+      if: ${{ !cancelled() && steps.autopkgtest.outputs.output-path != '' }}
+      uses: actions/upload-artifact@v6
+      with:
+        name: "autopkgtest-${{ inputs.name }}-${{ inputs.distro }}-${{ inputs.codename }}-${{ inputs.stage }}-${{ inputs.arch }}"
+        path: "${{ steps.autopkgtest.outputs.output-path }}"
+        if-no-files-found: ignore
