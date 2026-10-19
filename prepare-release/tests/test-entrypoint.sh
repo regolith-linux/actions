@@ -221,6 +221,33 @@ else
   show_output
 fi
 
+echo ""
+echo "Tag names:"
+
+expect_new_release "main" "fixture-pkg" "main" "1:2.0~rc1-1" \
+  "v1.2.0-rc1-1"
+
+expect_new_release "regolith-49" "regolith-control-center" "regolith/49" "1.49.0-4" \
+  "v1.49.0-4-gnome-49"
+
+expect_new_release "regolith-50" "regolith-control-center" "regolith/50" "1.50.4-1" \
+  "v1.50.4-1-gnome-50"
+
+expect_new_release "sway-v1.11" "sway-regolith" "packaging/v1.11-regolith" "1.11-2" \
+  "v1.11-2"
+
+# a ref without a rule is refused before anything else happens
+setup_case "unknown-ref" "fixture-pkg" "regolith/99" "1.99.0-1"
+run_entrypoint "fixture-pkg" "regolith/99"
+if [ "$(cat "$CASE_DIR/rc")" != 0 ] &&
+  output_has "'regolith/99' is not a valid ref to release from." &&
+  voulage_unchanged; then
+  pass "unknown-ref: refused, voulage untouched"
+else
+  fail "unknown-ref: expected 'is not a valid ref to release from.'"
+  show_output
+fi
+
 if [ "$FAILED" != 0 ]; then
   echo -e "\033[0;31mSome tests failed.\033[0m"
   exit 1
