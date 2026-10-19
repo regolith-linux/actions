@@ -233,6 +233,9 @@ expect_new_release "regolith-49" "regolith-control-center" "regolith/49" "1.49.0
 expect_new_release "regolith-50" "regolith-control-center" "regolith/50" "1.50.4-1" \
   "v1.50.4-1-gnome-50"
 
+expect_new_release "regolith-51" "regolith-control-center" "regolith/51" "1.51.0-1" \
+  "v1.51.0-1-gnome-51"
+
 expect_new_release "sway-v1.11" "sway-regolith" "packaging/v1.11-regolith" "1.11-2" \
   "v1.11-2"
 
