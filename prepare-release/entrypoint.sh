@@ -82,6 +82,24 @@ generate_tag_name() {
   RELEASE_VERSION="$full_version"
 }
 
+release_exists() {
+  # the tag is in the local checkout
+  if [ "$(git tag --list "${RELEASE_VERSION}" 2>/dev/null | wc -l)" != 0 ]; then
+    return 0
+  fi
+
+  # A missing local tag proves nothing: actions/checkout fetches a single commit
+  # and no tags by default (fetch-depth: 1, fetch-tags: false). Ask the package
+  # repo itself, and stop if it can't be asked rather than release blindly.
+  local remote_tags=""
+  if ! remote_tags=$(GIT_TERMINAL_PROMPT=0 git ls-remote --tags --refs "${PACKAGE_REPO}" "refs/tags/${RELEASE_VERSION}"); then
+    echo -e "\033[0;31merror: could not list the tags of '${PACKAGE_REPO}'\033[0m"
+    exit 1
+  fi
+
+  [ -n "$remote_tags" ]
+}
+
 process_model() {
   # model_sub_path can be empty, or ends with a slash
   local model_sub_path=$1
@@ -199,7 +217,7 @@ main() {
   echo -e "\033[0;34mLooking for release '${RELEASE_VERSION}' in ${PACKAGE_REPO}\033[0m"
 
   # current tag does exist in the repository, do not recreate it again
-  if [ "$(git tag --list "${RELEASE_VERSION}" | wc -l)" != 0 ] ; then
+  if release_exists; then
     RELEASE_EXISTS=true
     echo "Release exists! Do not recreate it again!"
 
