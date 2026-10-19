@@ -41,6 +41,7 @@ generate_tag_name() {
     "regolith/46")                                full_version+="-gnome-46" ;;
     "regolith/48")                                full_version+="-gnome-48" ;;
     "regolith/49")                                full_version+="-gnome-49" ;;
+    "regolith/50")                                full_version+="-gnome-50" ;;
 
     # unknown package ref
     *) unsupported_ref="true" ;;
@@ -61,6 +62,7 @@ generate_tag_name() {
     "sway-regolith:::packaging/v1.8-regolith")    full_version+="-debian-testing" ;;
     "sway-regolith:::packaging/v1.9-regolith")    ;;
     "sway-regolith:::packaging/v1.10-regolith")   ;;
+    "sway-regolith:::packaging/v1.11-regolith")   ;;
     "whitesur-gtk-theme:::debian")                ;;
 
     # This package is exceptional. It is not built from a regolith repo and cannot push tags.
