@@ -2,7 +2,8 @@ name: Upload Files
 description: |
   Upload files with given pattern from a path to the server. The target to upload
   files to is defined with a combination of `base` and `folder` which will be the
-  format of `<upload-to-base>/<upload-to-folder>`.
+  format of `<upload-to-base>/<upload-to-folder>`. Failed SSH connections are
+  retried.
 
 inputs:
   upload-from:
@@ -30,29 +31,13 @@ runs:
   steps:
     - name: Upload Files
       shell: bash
-      run: |
-        UPLOAD_FROM="${{ inputs.upload-from }}"
-        UPLOAD_TO_BASE="${{ inputs.upload-to-base }}"
-        UPLOAD_TO_FOLDER="${{ inputs.upload-to-folder }}"
-
-        UPLOAD_FULL_PATH="${UPLOAD_TO_BASE%/}/${UPLOAD_TO_FOLDER%/}/"
-
-        if [ "${{ inputs.use-run-number }}" == "true" ]; then
-          UPLOAD_FULL_PATH+="run-${{ github.run_id }}/"
-        fi
-
-        mkpath_flag=""
-
-        if rsync --help | grep mkpath >/dev/null; then
-          mkpath_flag="--mkpath"
-        else
-          ssh ${{ env.server-username }}@${{ env.server-address }} "mkdir -p ${UPLOAD_FULL_PATH}"
-        fi
-
-        echo "::group::Uploading files..."
-        rsync \
-          -avzhH \
-          --ignore-missing-args $mkpath_flag \
-          ${UPLOAD_FROM%/}/${{ inputs.upload-pattern }} \
-          ${{ env.server-username }}@${{ env.server-address }}:${UPLOAD_FULL_PATH}
-        echo "::endgroup::"
+      env:
+        UPLOAD_FROM: "${{ inputs.upload-from }}"
+        UPLOAD_PATTERN: "${{ inputs.upload-pattern }}"
+        UPLOAD_TO_BASE: "${{ inputs.upload-to-base }}"
+        UPLOAD_TO_FOLDER: "${{ inputs.upload-to-folder }}"
+        USE_RUN_NUMBER: "${{ inputs.use-run-number }}"
+        RUN_ID: "${{ github.run_id }}"
+        SERVER_USERNAME: "${{ env.server-username }}"
+        SERVER_ADDRESS: "${{ env.server-address }}"
+      run: $GITHUB_ACTION_PATH/upload.sh

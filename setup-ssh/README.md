@@ -1,7 +1,8 @@
 <!-- AUTO_GENERATE_START -->
 # Setup SSH
 
-Setup SSH agent and add server keyscan to the known_hosts file.
+Setup SSH agent and add server keyscan to the known_hosts file. Each key type
+is scanned on its own, and a scan that cannot connect is retried.
 <!-- AUTO_GENERATE_END -->
 
 ## Usage

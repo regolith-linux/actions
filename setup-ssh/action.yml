@@ -1,6 +1,7 @@
 name: Setup SSH
 description: |
-  Setup SSH agent and add server keyscan to the known_hosts file.
+  Setup SSH agent and add server keyscan to the known_hosts file. Each key type
+  is scanned on its own, and a scan that cannot connect is retried.
 
 inputs:
   ssh-host:
@@ -20,4 +21,6 @@ runs:
 
     - name: Generate Known Hosts
       shell: bash
-      run: ssh-keyscan -H ${{ inputs.ssh-host }} >> /home/regolith/.ssh/known_hosts
+      env:
+        SSH_HOST: "${{ inputs.ssh-host }}"
+      run: $GITHUB_ACTION_PATH/keyscan.sh
